@@ -1,5 +1,9 @@
 from fastapi import FastAPI
+from app.database.database import Base, engine
+from app.models import camera, shelf, store, user
 from app.routes import auth, users, stores, shelves, cameras
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Consumer Attention Mapping System")
 
@@ -9,6 +13,6 @@ app.include_router(stores.router)
 app.include_router(shelves.router)
 app.include_router(cameras.router)
 
-@app.get('/')
-def root():
-    return {'message': 'API is running'}
+@app.get("/")
+def home():
+    return {"message": "API Running Successfully"}
