@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from app.database.database import Base, engine
 from app.models import camera, shelf, store, user
-from app.routes import auth, users, stores, shelves, cameras
+from app.routers import auth
+from app.routes import users, stores, shelves, cameras
 
 Base.metadata.create_all(bind=engine)
 

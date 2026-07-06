@@ -1,3 +1,11 @@
-export default function Shelves() {
-  return <div>Shelves Page</div>;
+import DashboardLayout from '../layouts/DashboardLayout';
+
+function Shelves() {
+  return (
+    <DashboardLayout>
+      <h1>Shelf Management</h1>
+    </DashboardLayout>
+  );
 }
+
+export default Shelves;

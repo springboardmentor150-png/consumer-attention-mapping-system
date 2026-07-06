@@ -1,3 +1,7 @@
-export default function App() {
-  return <h1>Consumer Attention Mapping System</h1>;
+import AppRoutes from './routes/AppRoutes';
+
+function App() {
+  return <AppRoutes />;
 }
+
+export default App;
