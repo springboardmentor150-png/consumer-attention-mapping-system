@@ -18,8 +18,14 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await registerUser(form);
-    alert('Registration Successful');
+    try {
+      const response = await registerUser(form);
+      console.log(response.data);
+      alert('Registration Successful');
+    } catch (error) {
+      console.log(error);
+      alert(error.response?.data?.detail || 'Registration Failed');
+    }
   };
 
   return (
