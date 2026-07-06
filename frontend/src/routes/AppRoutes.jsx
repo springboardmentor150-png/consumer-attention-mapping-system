@@ -5,6 +5,7 @@ import Dashboard from '../pages/Dashboard';
 import Stores from '../pages/Stores';
 import AddStore from '../pages/AddStore';
 import Shelves from '../pages/Shelves';
+import AddShelf from '../pages/AddShelf';
 import Cameras from '../pages/Cameras';
 import Profile from '../pages/Profile';
 import ProtectedRoute from '../components/ProtectedRoute';
@@ -43,6 +44,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <Shelves />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/add-shelf"
+        element={
+          <ProtectedRoute>
+            <AddShelf />
           </ProtectedRoute>
         }
       />
