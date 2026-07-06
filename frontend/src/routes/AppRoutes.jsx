@@ -3,6 +3,7 @@ import Login from '../pages/Login';
 import Register from '../pages/Register';
 import Dashboard from '../pages/Dashboard';
 import Stores from '../pages/Stores';
+import AddStore from '../pages/AddStore';
 import Shelves from '../pages/Shelves';
 import Cameras from '../pages/Cameras';
 import Profile from '../pages/Profile';
@@ -26,6 +27,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <Stores />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/add-store"
+        element={
+          <ProtectedRoute>
+            <AddStore />
           </ProtectedRoute>
         }
       />
