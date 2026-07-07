@@ -7,6 +7,7 @@ import AddStore from '../pages/AddStore';
 import Shelves from '../pages/Shelves';
 import AddShelf from '../pages/AddShelf';
 import Cameras from '../pages/Cameras';
+import AddCamera from '../pages/AddCamera';
 import Profile from '../pages/Profile';
 import ProtectedRoute from '../components/ProtectedRoute';
 
@@ -60,6 +61,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <Cameras />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/add-camera"
+        element={
+          <ProtectedRoute>
+            <AddCamera />
           </ProtectedRoute>
         }
       />
