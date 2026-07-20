@@ -1,14 +1,10 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
+
 
 class StoreBase(BaseModel):
-    store_name: str
+    name: str
     location: str
+
 
 class StoreCreate(StoreBase):
     pass
-
-
-class StoreResponse(StoreBase):
-    id: int
-
-    model_config = ConfigDict(from_attributes=True)

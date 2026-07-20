@@ -1,45 +1,144 @@
-import { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { loginUser } from '../services/authService';
-import { AuthContext } from '../context/AuthContext';
+import '../styles/Login.css';
 
-function Login() {
+export default function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext);
-  const [form, setForm] = useState({
-    email: '',
-    password: ''
-  });
+  const { setUser } = useAuth();
 
-  const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value
-    });
-  };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError('');
+    setSuccessMessage('');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (!email || !password) {
+      setError('Please enter both email and password.');
+      return;
+    }
+
+    setLoading(true);
+
     try {
-      const res = await loginUser(form);
-      login(res.data);
-      alert('Login Successful');
-      navigate('/dashboard');
-    } catch {
-      alert('Invalid Credentials');
+      const { data } = await loginUser({ email, password });
+      const token = data.access_token || data.token || data.accessToken;
+
+      if (!token) {
+        throw new Error('No authentication token returned from server.');
+      }
+
+      window.localStorage.setItem('authToken', token);
+      window.localStorage.setItem('authUser', JSON.stringify({ email }));
+      setUser({ email });
+
+      setSuccessMessage('Login successful! Redirecting to dashboard...');
+      window.setTimeout(() => navigate('/dashboard'), 700);
+    } catch (submitError) {
+      setError(
+        submitError.response?.data?.detail ||
+          submitError.message ||
+          'Login Failed'
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="email" name="email" placeholder="Email" onChange={handleChange} />
-        <input type="password" name="password" placeholder="Password" onChange={handleChange} />
-        <button>Login</button>
-      </form>
+    <div className="login-page">
+      <div className="login-card">
+        <div className="login-brandArea">
+          <div className="login-brandIcon">👁️</div>
+          <div>
+            <h1 className="login-title">Consumer Attention</h1>
+            <p className="login-subtitle">AI Powered Retail Analytics</p>
+          </div>
+        </div>
+
+        <div className="login-formWrapper">
+          <div className="login-header">
+            <h2 className="login-heading">Login</h2>
+            <p className="login-description">Welcome back! Please login to continue.</p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="login-form">
+            {error && <div className="login-errorMessage">{error}</div>}
+            {successMessage && <div className="login-successMessage">{successMessage}</div>}
+
+            <div className="login-fieldGroup">
+              <label className="login-label" htmlFor="email">Email</label>
+              <div className="login-inputWrapper">
+                <span className="login-inputIcon">📧</span>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  className="login-input"
+                  autoComplete="email"
+                />
+              </div>
+            </div>
+
+            <div className="login-fieldGroup">
+              <label className="login-label" htmlFor="password">Password</label>
+              <div className="login-inputWrapper">
+                <span className="login-inputIcon">🔒</span>
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  className="login-input"
+                  autoComplete="current-password"
+                />
+                <span className="login-eyeIcon">👁️</span>
+              </div>
+            </div>
+
+            <div className="login-rowBetween">
+              <label className="login-checkboxLabel">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="login-checkbox"
+                />
+                Remember me
+              </label>
+              <Link to="#" className="login-forgotLink">Forgot Password?</Link>
+            </div>
+
+            <button type="submit" className="login-primaryButton" disabled={loading}>
+              {loading ? 'Signing in...' : 'Login'}
+            </button>
+          </form>
+
+          <div className="login-divider">
+            <span className="login-dividerLine" />
+            <span className="login-dividerText">or</span>
+            <span className="login-dividerLine" />
+          </div>
+
+          <button type="button" className="login-secondaryButton">
+            <span className="login-googleIcon">G</span> Login with Google
+          </button>
+
+          <p className="login-footerText">
+            Don’t have an account?{' '}
+            <Link to="/register" className="login-registerLink">Register here</Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
-
-export default Login;

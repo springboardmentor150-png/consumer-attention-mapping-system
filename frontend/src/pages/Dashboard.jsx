@@ -1,24 +1,29 @@
 import DashboardLayout from '../layouts/DashboardLayout';
-import DashboardCard from '../components/DashboardCard';
+import '../styles/Dashboard.css';
 
-function Dashboard() {
+export default function Dashboard() {
+  const cards = [
+    { icon: '🏪', label: 'Stores', value: '5' },
+    { icon: '📦', label: 'Shelves', value: '28' },
+    { icon: '📷', label: 'Cameras', value: '18' },
+    { icon: '👥', label: 'Users', value: '12' },
+  ];
+
   return (
     <DashboardLayout>
-      <h1>Dashboard</h1>
-      <div
-        style={{
-          display: 'flex',
-          gap: '20px',
-          marginTop: '30px'
-        }}
-      >
-        <DashboardCard title="Stores" value="5" />
-        <DashboardCard title="Shelves" value="28" />
-        <DashboardCard title="Cameras" value="18" />
-        <DashboardCard title="Users" value="12" />
+      <div className="dashboard-content">
+        <h1 className="dashboard-title">Dashboard</h1>
+
+        <div className="dashboard-cards-grid">
+          {cards.map((card) => (
+            <div key={card.label} className="dashboard-card">
+              <div className="card-icon">{card.icon}</div>
+              <h3 className="card-label">{card.label}</h3>
+              <p className="card-value">{card.value}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </DashboardLayout>
   );
 }
-
-export default Dashboard;

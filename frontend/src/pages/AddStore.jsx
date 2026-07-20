@@ -9,7 +9,7 @@ function AddStore() {
 
   const handleSubmit = async () => {
     await createStore({
-      store_name: storeName,
+      name: storeName,
       location: location
     });
     alert('Store Added Successfully');

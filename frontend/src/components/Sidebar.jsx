@@ -1,35 +1,51 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import '../styles/Sidebar.css';
 
-function Sidebar() {
+export default function Sidebar() {
+  const navigate = useNavigate();
+  const { setUser } = useAuth();
+
+  const menuItems = [
+    { icon: '🏠', label: 'Dashboard', path: '/dashboard' },
+    { icon: '🏪', label: 'Stores', path: '/stores' },
+    { icon: '📦', label: 'Shelves', path: '/shelves' },
+    { icon: '📷', label: 'Cameras', path: '/cameras' },
+    { icon: '👥', label: 'Users', path: '/users' },
+    { icon: '👤', label: 'Profile', path: '/profile' },
+    { icon: '⚙️', label: 'Settings', path: '#' },
+  ];
+
+  const handleLogout = () => {
+    window.localStorage.removeItem('authToken');
+    window.localStorage.removeItem('authUser');
+    setUser(null);
+    navigate('/');
+  };
+
   return (
-    <div
-      style={{
-        width: '250px',
-        background: '#1f2937',
-        color: 'white',
-        minHeight: '100vh',
-        padding: '20px'
-      }}
-    >
-      <h2>Retail AI</h2>
-      <hr />
-      <p>
-        <Link to="/dashboard">Dashboard</Link>
-      </p>
-      <p>
-        <Link to="/stores">Stores</Link>
-      </p>
-      <p>
-        <Link to="/shelves">Shelves</Link>
-      </p>
-      <p>
-        <Link to="/cameras">Cameras</Link>
-      </p>
-      <p>
-        <Link to="/profile">Profile</Link>
-      </p>
-    </div>
+    <aside className="sidebar">
+      <div className="sidebar-brand">
+        <h2>Retail AI</h2>
+      </div>
+
+      <nav className="sidebar-menu">
+        {menuItems.map((item) => (
+          <button
+            key={item.label}
+            className="sidebar-menu-item"
+            onClick={() => item.path !== '#' && navigate(item.path)}
+          >
+            <span className="sidebar-icon">{item.icon}</span>
+            <span>{item.label}</span>
+          </button>
+        ))}
+      </nav>
+
+      <button className="sidebar-logout" onClick={handleLogout}>
+        <span className="sidebar-icon">🚪</span>
+        <span>Logout</span>
+      </button>
+    </aside>
   );
 }
-
-export default Sidebar;
