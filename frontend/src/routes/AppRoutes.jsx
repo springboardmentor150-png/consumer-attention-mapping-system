@@ -9,6 +9,7 @@ import AddShelf from '../pages/AddShelf';
 import Cameras from '../pages/Cameras';
 import AddCamera from '../pages/AddCamera';
 import Profile from '../pages/Profile';
+import Analytics from '../pages/Analytics';
 import ProtectedRoute from '../components/ProtectedRoute';
 
 function AppRoutes() {
@@ -77,6 +78,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <Profile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/analytics"
+        element={
+          <ProtectedRoute>
+            <Analytics />
           </ProtectedRoute>
         }
       />

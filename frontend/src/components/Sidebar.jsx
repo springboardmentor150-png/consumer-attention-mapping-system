@@ -1,19 +1,20 @@
 import { useNavigate } from 'react-router-dom';
+import { FiBarChart2, FiCamera, FiHome, FiSettings, FiShoppingBag, FiUser, FiUsers } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import '../styles/Sidebar.css';
 
 export default function Sidebar() {
   const navigate = useNavigate();
   const { setUser } = useAuth();
-
   const menuItems = [
-    { icon: '🏠', label: 'Dashboard', path: '/dashboard' },
-    { icon: '🏪', label: 'Stores', path: '/stores' },
-    { icon: '📦', label: 'Shelves', path: '/shelves' },
-    { icon: '📷', label: 'Cameras', path: '/cameras' },
-    { icon: '👥', label: 'Users', path: '/users' },
-    { icon: '👤', label: 'Profile', path: '/profile' },
-    { icon: '⚙️', label: 'Settings', path: '#' },
+    { icon: FiHome, label: 'Dashboard', path: '/dashboard' },
+    { icon: FiShoppingBag, label: 'Stores', path: '/stores' },
+    { icon: FiShoppingBag, label: 'Shelves', path: '/shelves' },
+    { icon: FiCamera, label: 'Cameras', path: '/cameras' },
+    { icon: FiBarChart2, label: 'Analytics', path: '/analytics' },
+    { icon: FiUsers, label: 'Users', path: '/users' },
+    { icon: FiUser, label: 'Profile', path: '/profile' },
+    { icon: FiSettings, label: 'Settings', path: '#' },
   ];
 
   const handleLogout = () => {
@@ -25,27 +26,18 @@ export default function Sidebar() {
 
   return (
     <aside className="sidebar">
-      <div className="sidebar-brand">
-        <h2>Retail AI</h2>
-      </div>
-
+      <div className="sidebar-brand"><h2>Retail AI</h2></div>
       <nav className="sidebar-menu">
-        {menuItems.map((item) => (
-          <button
-            key={item.label}
-            className="sidebar-menu-item"
-            onClick={() => item.path !== '#' && navigate(item.path)}
-          >
-            <span className="sidebar-icon">{item.icon}</span>
-            <span>{item.label}</span>
-          </button>
-        ))}
+        {menuItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <button key={item.label} className="sidebar-menu-item" onClick={() => item.path !== '#' && navigate(item.path)}>
+              <span className="sidebar-icon"><Icon /></span><span>{item.label}</span>
+            </button>
+          );
+        })}
       </nav>
-
-      <button className="sidebar-logout" onClick={handleLogout}>
-        <span className="sidebar-icon">🚪</span>
-        <span>Logout</span>
-      </button>
+      <button className="sidebar-logout" onClick={handleLogout}><span>Logout</span></button>
     </aside>
   );
 }

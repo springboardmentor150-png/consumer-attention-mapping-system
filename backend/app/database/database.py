@@ -9,7 +9,10 @@ load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-engine = create_engine(DATABASE_URL)
+if DATABASE_URL:
+    engine = create_engine(DATABASE_URL)
+else:
+    engine = create_engine("sqlite:///./app.db")
 
 SessionLocal = sessionmaker(
     autocommit=False,
