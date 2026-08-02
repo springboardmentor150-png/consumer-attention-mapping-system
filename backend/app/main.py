@@ -2,7 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database.database import engine
 from app.models import attention, camera, role, shelf, store, user, dwell
-from app.routes import auth, users, stores, shelves, cameras
+from app.routes import users, stores, shelves
+from app.routers import auth as auth_router
+from app.routers import cameras as cameras_router
 from app.routers import tracking
 from app.routers import attention as attention_router
 from app.routers.analytics import router as analytics_router
@@ -20,11 +22,11 @@ app.add_middleware(
 Base = user.Base
 Base.metadata.create_all(bind=engine)
 
-app.include_router(auth.router)
+app.include_router(auth_router.router)
 app.include_router(users.router)
 app.include_router(stores.router)
 app.include_router(shelves.router)
-app.include_router(cameras.router)
+app.include_router(cameras_router.router)
 app.include_router(tracking.router)
 app.include_router(attention_router.router)
 app.include_router(analytics_router)

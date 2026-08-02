@@ -1,13 +1,14 @@
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
+import '../styles/DashboardLayout.css';
 
 function DashboardLayout({ children }) {
   return (
-    <div style={{ display: 'flex' }}>
+    <div className="dashboard-layout">
       <Sidebar />
-      <div style={{ width: '100%' }}>
+      <div className="dashboard-main">
         <Navbar />
-        <div style={{ padding: '20px' }}>{children}</div>
+        <div className="dashboard-body">{children}</div>
       </div>
     </div>
   );
