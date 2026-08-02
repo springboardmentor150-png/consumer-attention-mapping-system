@@ -1,4 +1,4 @@
-import { FiBell, FiChevronDown } from 'react-icons/fi';
+import { FiBell, FiChevronDown, FiMenu } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import '../styles/Navbar.css';
 
@@ -9,7 +9,7 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <h1 className="navbar-title">Consumer Attention Mapping</h1>
+        <div className="navbar-heading"><button className="navbar-menu-button" type="button" aria-label="Toggle navigation"><FiMenu aria-hidden="true" /></button><h1 className="navbar-title">Consumer Attention Mapping</h1></div>
         <div className="navbar-actions">
           <button className="navbar-icon-button" type="button" aria-label="Notifications"><FiBell aria-hidden="true" /></button>
           <button className="navbar-profile" type="button" aria-label="Open profile menu"><span>{initials}</span><FiChevronDown aria-hidden="true" /></button>

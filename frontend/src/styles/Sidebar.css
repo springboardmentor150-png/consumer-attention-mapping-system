@@ -10,9 +10,21 @@
 }
 
 .sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   padding: 0 16px 48px;
   border: none;
   margin: 0;
+}
+
+.sidebar-brand > svg {
+  width: 25px;
+  height: 25px;
+  padding: 5px;
+  border-radius: 6px;
+  background: #0961e8;
+  color: #fff;
 }
 
 .sidebar-brand h2 {

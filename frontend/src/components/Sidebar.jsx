@@ -27,7 +27,7 @@ export default function Sidebar() {
 
   return (
     <aside className="sidebar">
-      <div className="sidebar-brand"><h2>Retail AI</h2></div>
+      <div className="sidebar-brand"><FiShoppingBag aria-hidden="true" /><h2>Retail AI</h2></div>
       <nav className="sidebar-menu">
         {menuItems.map((item) => {
           const Icon = item.icon;
