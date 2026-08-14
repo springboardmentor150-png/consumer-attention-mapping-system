@@ -1,0 +1,131 @@
+/* ===========================
+   KPI CARD
+=========================== */
+
+.stat-card{
+
+    background:#ffffff;
+
+    border-radius:18px;
+
+    padding:24px;
+
+    box-shadow:0 8px 25px rgba(15,23,42,.08);
+
+    border:1px solid #E2E8F0;
+
+    transition:.3s;
+
+    height:160px;
+
+    display:flex;
+
+    align-items:center;
+
+}
+
+.stat-card:hover{
+
+    transform:translateY(-6px);
+
+    box-shadow:0 15px 35px rgba(15,23,42,.12);
+
+}
+
+/* ===========================
+   CONTENT
+=========================== */
+
+.stat-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    width:100%;
+}
+
+.stat-title{
+
+    margin:0;
+
+    color:#64748B;
+
+    font-size:15px;
+
+    font-weight:500;
+}
+
+.stat-value{
+
+    margin:10px 0;
+
+    color:#0F172A;
+
+    font-size:32px;
+
+    font-weight:700;
+}
+
+.stat-change{
+
+    color:#16A34A;
+
+    font-size:14px;
+
+    font-weight:600;
+}
+
+/* ===========================
+   ICON
+=========================== */
+
+.stat-icon{
+
+    width:70px;
+
+    height:70px;
+
+    border-radius:18px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:white;
+
+    font-size:30px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:768px){
+
+.stat-card{
+
+    height:auto;
+
+    padding:20px;
+}
+
+.stat-value{
+
+    font-size:26px;
+}
+
+.stat-icon{
+
+    width:60px;
+    height:60px;
+}
+
+}

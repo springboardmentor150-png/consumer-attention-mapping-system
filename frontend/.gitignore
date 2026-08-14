@@ -1,0 +1,80 @@
+# ===========================
+# Python
+# ===========================
+
+# Virtual environments
+backend/venv/
+venv/
+
+# Python cache
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ===========================
+# Environment / Secrets
+# ===========================
+
+.env
+*.env
+backend/.env
+frontend/.env
+.env.local
+*.env.local
+
+# ===========================
+# React / Node
+# ===========================
+
+node_modules/
+frontend/node_modules/
+
+# Production build
+frontend/build/
+frontend/dist/
+
+# ===========================
+# VS Code
+# ===========================
+
+.vscode/
+
+# ===========================
+# OS files
+# ===========================
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===========================
+# Generated / Temporary Files
+# ===========================
+
+*.log
+*.tmp
+
+# Python / ML generated outputs
+*.mp4
+*.avi
+*.mov
+
+# Generated heatmaps
+heatmap.png
+
+# ===========================
+# Test / Coverage
+# ===========================
+
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Generated backend outputs
+backend/tracked_output.mp4
+backend/heatmap.png
+
+# Test videos
+backend/test_videos/*.mp4

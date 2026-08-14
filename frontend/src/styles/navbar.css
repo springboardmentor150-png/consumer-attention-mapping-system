@@ -1,0 +1,200 @@
+/* ===========================
+   NAVBAR
+=========================== */
+
+.navbar{
+    height:75px;
+
+    background:#ffffff;
+
+    border-radius:16px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:0 30px;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.06);
+
+    margin-bottom:30px;
+}
+
+/* ===========================
+   LEFT
+=========================== */
+
+.navbar-left h3{
+
+    margin:0;
+
+    color:#0F172A;
+
+    font-size:28px;
+
+    font-weight:700;
+}
+
+/* ===========================
+   RIGHT
+=========================== */
+
+.navbar-right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
+}
+
+/* ===========================
+   SEARCH
+=========================== */
+
+.search-box{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    width:300px;
+
+    background:#F8FAFC;
+
+    border:1px solid #E2E8F0;
+
+    border-radius:12px;
+
+    padding:12px 15px;
+}
+
+.search-box input{
+
+    width:100%;
+
+    border:none;
+
+    outline:none;
+
+    background:transparent;
+
+    font-size:15px;
+}
+
+.search-box svg{
+
+    color:#64748B;
+}
+
+/* ===========================
+   NOTIFICATION
+=========================== */
+
+.notification{
+
+    width:48px;
+    height:48px;
+
+    border-radius:50%;
+
+    background:#F8FAFC;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    cursor:pointer;
+
+    position:relative;
+
+    transition:.3s;
+}
+
+.notification:hover{
+
+    background:#0F766E;
+
+    color:white;
+}
+
+.notification-dot{
+
+    width:10px;
+
+    height:10px;
+
+    background:red;
+
+    border-radius:50%;
+
+    position:absolute;
+
+    top:12px;
+
+    right:12px;
+}
+
+/* ===========================
+   PROFILE
+=========================== */
+
+.profile{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    padding:8px 15px;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.profile:hover{
+
+    background:#F8FAFC;
+}
+
+.profile-info h6{
+
+    margin:0;
+
+    font-size:15px;
+
+    font-weight:600;
+}
+
+.profile-info small{
+
+    color:#64748B;
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:992px){
+
+.search-box{
+
+    display:none;
+}
+
+.navbar{
+
+    padding:0 20px;
+}
+
+}

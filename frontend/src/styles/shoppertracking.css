@@ -1,0 +1,114 @@
+/* ===========================
+   SHOPPER TRACKING
+=========================== */
+
+.tracking-toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:14px;
+
+    margin-bottom:24px;
+}
+
+.tracking-live-pill{
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    background:#ECFDF5;
+    color:#0F766E;
+    font-weight:600;
+    font-size:13px;
+
+    padding:8px 16px;
+    border-radius:999px;
+}
+
+.tracking-live-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#22C55E;
+
+    animation:pulseDot 1.6s ease-in-out infinite;
+}
+
+@keyframes pulseDot{
+    0%,100%{ opacity:1; box-shadow:0 0 0 0 rgba(34,197,94,.5); }
+    50%{ opacity:.6; box-shadow:0 0 0 6px rgba(34,197,94,0); }
+}
+
+/* Grid of shopper cards */
+
+.tracking-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+    gap:18px;
+}
+
+.shopper-card{
+    background:#FFFFFF;
+    border:1px solid #E2E8F0;
+    border-radius:18px;
+    padding:22px;
+
+    box-shadow:0 8px 25px rgba(15,23,42,.06);
+    transition:.3s;
+}
+
+.shopper-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 15px 35px rgba(15,23,42,.12);
+}
+
+.shopper-card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+
+    margin-bottom:14px;
+}
+
+.shopper-card-top h4{
+    font-size:16px;
+    font-weight:700;
+    color:#0F172A;
+}
+
+.shopper-status{
+    font-size:12px;
+    font-weight:600;
+    padding:4px 10px;
+    border-radius:999px;
+}
+
+.shopper-status.active{
+    background:#ECFDF5;
+    color:#0F766E;
+}
+
+.shopper-status.idle{
+    background:#F1F5F9;
+    color:#64748B;
+}
+
+.shopper-meta{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+
+    font-size:14px;
+    color:#475569;
+}
+
+.shopper-meta span strong{
+    color:#0F172A;
+}
+
+@media(max-width:768px){
+    .tracking-grid{
+        grid-template-columns:1fr;
+    }
+}

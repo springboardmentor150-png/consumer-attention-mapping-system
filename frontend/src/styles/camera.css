@@ -1,0 +1,91 @@
+/* ===========================
+   PAGE HEADER
+=========================== */
+
+.page-header{
+    margin-bottom:30px;
+}
+
+.page-header h2{
+    font-size:30px;
+    font-weight:700;
+    color:#0F172A;
+    margin-bottom:8px;
+}
+
+.page-header p{
+    color:#64748B;
+    font-size:16px;
+}
+
+/* ===========================
+   CAMERA CARD
+=========================== */
+
+.camera-card{
+    background:#FFFFFF;
+    border:1px solid #E2E8F0;
+    border-radius:18px;
+    padding:24px;
+    box-shadow:0 8px 25px rgba(15,23,42,.08);
+    transition:.3s;
+    max-width:650px;
+}
+
+.camera-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 15px 35px rgba(15,23,42,.12);
+}
+
+.camera-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.camera-top h4{
+    margin:0;
+    color:#0F172A;
+    font-size:22px;
+    font-weight:600;
+}
+
+.camera-card p{
+    margin-bottom:12px;
+    color:#475569;
+    font-size:15px;
+}
+
+/* ===========================
+   STATUS
+=========================== */
+
+.status{
+    padding:6px 14px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:600;
+}
+
+.status.online{
+    background:#DCFCE7;
+    color:#15803D;
+}
+
+/* ===========================
+   BUTTONS
+=========================== */
+
+.camera-buttons{
+    display:flex;
+    gap:12px;
+    margin-top:25px;
+    flex-wrap:wrap;
+}
+
+.camera-buttons button{
+    border-radius:10px;
+    padding:10px 18px;
+    font-weight:600;
+}

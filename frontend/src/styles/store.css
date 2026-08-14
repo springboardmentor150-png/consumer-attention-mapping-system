@@ -1,0 +1,84 @@
+/* ===========================
+   PAGE HEADER
+=========================== */
+
+.page-header{
+    margin-bottom:30px;
+}
+
+.page-header h2{
+    font-size:30px;
+    font-weight:700;
+    color:#0F172A;
+    margin-bottom:8px;
+}
+
+.page-header p{
+    color:#64748B;
+    font-size:16px;
+}
+
+/* ===========================
+   STORE CARD
+=========================== */
+
+.store-card{
+    background:#FFFFFF;
+    border:1px solid #E2E8F0;
+    border-radius:18px;
+    padding:30px;
+    max-width:850px;
+    box-shadow:0 8px 25px rgba(15,23,42,.08);
+    transition:.3s;
+}
+
+.store-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 15px 35px rgba(15,23,42,.12);
+}
+
+.store-card h4{
+    margin-bottom:25px;
+    color:#0F172A;
+    font-weight:700;
+}
+
+/* ===========================
+   FORM
+=========================== */
+
+.store-card label{
+    font-weight:600;
+    color:#334155;
+    margin-bottom:8px;
+}
+
+.store-card .form-control{
+    border-radius:12px;
+    border:1px solid #CBD5E1;
+    padding:12px;
+    font-size:15px;
+    transition:.3s;
+}
+
+.store-card .form-control:focus{
+    border-color:#14B8A6;
+    box-shadow:0 0 0 3px rgba(20,184,166,.15);
+}
+
+/* ===========================
+   BUTTON
+=========================== */
+
+.store-card button{
+    background:#0F766E;
+    border:none;
+    border-radius:12px;
+    padding:12px 24px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.store-card button:hover{
+    background:#115E59;
+}
