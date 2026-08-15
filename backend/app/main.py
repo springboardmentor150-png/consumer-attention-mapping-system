@@ -17,6 +17,8 @@ from fastapi.openapi.utils import get_openapi
 
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.reports import router as reports_router
+
 app = FastAPI(
     title="Consumer Attention Mapping System"
 )
@@ -32,7 +34,7 @@ app.include_router(auth_router)
 app.include_router(store_router)
 app.include_router(shelf_router)
 app.include_router(analytics_router)
-
+app.include_router(reports_router)
 
 @app.on_event("startup")
 def create_tables():
