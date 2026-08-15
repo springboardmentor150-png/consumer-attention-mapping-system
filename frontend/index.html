@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Consumer Attention Mapping System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="header">
+    <h1>Consumer Attention Mapping System</h1>
+    <p>AI-based Shopper Tracking & Attention Analytics</p>
+</div>
+
+
+<div class="cards">
+
+    <div class="card">
+        <h3>Total Shoppers</h3>
+        <p id="totalShoppers">0</p>
+    </div>
+
+    <div class="card">
+        <h3>Attention Time</h3>
+        <p id="attentionTime">0 sec</p>
+    </div>
+
+    <div class="card">
+        <h3>Current Segment</h3>
+        <p id="shopperSegment">-</p>
+    </div>
+
+    <div class="card">
+        <h3>Engagement Status</h3>
+        <p id="engagementStatus">Waiting</p>
+    </div>
+
+</div>
+
+<div class = "card">
+    <h3>Product Recommendations</h3>
+
+    <div id = "recommendationBox">
+        Loading recommendations...
+    </div>
+</div>
+
+
+<div class="container">
+
+    <div class="panel">
+
+        <h2>Live Shopper Analytics</h2>
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Shopper ID</th>
+                    <th>Attention Time</th>
+                    <th>Segment</th>
+                    <th>Updated At</th>
+                </tr>
+            </thead>
+
+            <tbody id="shopperTable">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <div class="panel">
+
+        <h2>Attention Heatmap</h2>
+
+        <canvas id="heatmapCanvas"
+                width="640"
+                height="360">
+        </canvas>
+
+    </div>
+
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
