@@ -7,9 +7,15 @@ from models import ShelfAnalytics
 from datetime import datetime
 from models import ShopperSession
 from fastapi.responses import FileResponse
+from report_service import generate_pdf_report
+
+from fastapi import Depends
+
+from recommendation_engine import generate_recommendation
 
 
-from database import engine, get_db
+
+from database import engine, get_db , SessionLocal
 from models import Base, User, Role, Store, Shelf
 from schemas import (
     UserRegister,
@@ -120,7 +126,8 @@ def login(
 
     return {
         "access_token": token,
-        "token_type": "bearer"
+        "token_type": "bearer",
+        "role_id": db_user.role_id
     }
 
 @app.post("/stores")
@@ -250,27 +257,71 @@ def get_live_status():
     }
 
 @app.get("/analytics/recommendations")
-def get_recommendations(db: Session = Depends(get_db)):
+def get_recommendations(
+    db: Session = Depends(get_db)
+):
 
-    recommendations = (
-        db.query(
-            ShelfAnalytics.shelf_name,
-            ShelfAnalytics.attractiveness_score,
-            ShelfAnalytics.recommendation
-        )
-        .order_by(ShelfAnalytics.id.desc())
-        .limit(10)
+    analytics = (
+        db.query(ShelfAnalytics)
+        .order_by(ShelfAnalytics.created_at.desc())
         .all()
     )
 
-    return [
-        {
-            "shelf": row.shelf_name,
-            "score": row.attractiveness_score,
-            "recommendation": row.recommendation
-        }
-        for row in recommendations
-    ]
+    recommendations = []
+
+    for item in analytics:
+
+        generated = generate_recommendation(
+            score=item.attractiveness_score or 0,
+            attention_time=item.attention_time or 0,
+            interaction_frequency=0,
+            pickup_rate=0,
+            conversion_rate=0
+        )
+
+        for recommendation in generated:
+
+            recommendations.append({
+                "shelf": item.shelf_name,
+                "score": round(
+                    item.attractiveness_score or 0,
+                    2
+                ),
+                "recommendation": recommendation
+            })
+
+    return recommendations
+
+
+@app.get("/analytics/alerts")
+def get_alerts():
+
+    db = SessionLocal()
+
+    analytics = db.query(ShelfAnalytics).all()
+
+    alerts = []
+
+    for item in analytics:
+
+        score = item.attractiveness_score or 0
+
+        if score < 40:
+
+            alerts.append({
+                "shelf": item.shelf_name,
+                "score": round(score, 2),
+                "severity": "high",
+                "type": "shelf_performance",
+                "message": (
+                    "Low-performing shelf. "
+                    "Consider improving visibility or relocating products."
+                )
+            })
+
+    db.close()
+
+    return alerts
 
 @app.get("/analytics/segments")
 def get_segments(db: Session = Depends(get_db)):
@@ -298,4 +349,37 @@ def get_heatmap():
     return FileResponse(
         "heatmap.png",
         media_type="image/png"
+    )
+
+
+@app.get("/analytics/report")
+def download_report():
+
+    file_path = "consumer_attention_report.xlsx"
+
+    return FileResponse(
+        path=file_path,
+        filename="consumer_attention_report.xlsx",
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+
+
+@app.get("/analytics/report/pdf")
+def download_pdf_report(
+    db: Session = Depends(get_db)
+):
+
+    file_path = "consumer_attention_report.pdf"
+
+    data = get_attention_analytics(db)
+
+    generate_pdf_report(
+        data,
+        file_path
+    )
+
+    return FileResponse(
+        path=file_path,
+        filename="consumer_attention_report.pdf",
+        media_type="application/pdf"
     )

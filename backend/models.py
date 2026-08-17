@@ -77,9 +77,9 @@ class ShelfAnalytics(Base):
 
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    attractiveness_score = Column(Float)
-
     recommendation = Column(String)
+
+    attractiveness_score = Column(Float)
 
     
 
