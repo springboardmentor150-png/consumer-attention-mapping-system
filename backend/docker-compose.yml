@@ -1,0 +1,8 @@
+services:
+  backend:
+    build: .
+    container_name: consumer-retention-app
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"

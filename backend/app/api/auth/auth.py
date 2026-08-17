@@ -1,5 +1,7 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
+
+from fastapi.security import OAuth2PasswordRequestForm
 
 from app.core.database import engine
 from app.models.user import User
@@ -52,12 +54,12 @@ def register(email: str, password: str):
 
 
 @router.post("/login")
-def login(email: str, password: str):
+def login(form_data: OAuth2PasswordRequestForm = Depends()):
     try:
         with Session(engine) as session:
 
             user = session.exec(
-                select(User).where(User.email == email)
+                select(User).where(User.email == form_data.username)
             ).first()
 
             if not user:
@@ -67,7 +69,7 @@ def login(email: str, password: str):
                 )
 
             if not verify_password(
-                password,
+                form_data.password,
                 user.password_hash
             ):
                 raise HTTPException(
