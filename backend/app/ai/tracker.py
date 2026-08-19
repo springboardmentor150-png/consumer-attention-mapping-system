@@ -12,14 +12,23 @@ from ultralytics import YOLO
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from app.ai.dwell_time import DwellTracker
-    from app.ai.gaze import detect_face, direction_to_shelf, estimate_head_direction
     from app.ai.zones import ZONE
 else:
     from .dwell_time import DwellTracker
-    from .gaze import detect_face, direction_to_shelf, estimate_head_direction
     from .zones import ZONE
 
 from app.database.database import SessionLocal
+
+
+def _try_import_gaze_helpers():
+    try:
+        if __package__ in (None, ""):
+            from app.ai.gaze import detect_face, direction_to_shelf, estimate_head_direction
+        else:
+            from .gaze import detect_face, direction_to_shelf, estimate_head_direction
+    except ImportError:
+        return None, None, None
+    return detect_face, direction_to_shelf, estimate_head_direction
 
 
 class PersonTracker:
@@ -30,7 +39,12 @@ class PersonTracker:
         attention_session_factory=SessionLocal,
     ) -> None:
         self.model = YOLO(model_path)
-        self.tracker = sv.ByteTrack()
+        self.tracker = sv.ByteTrack(
+            track_activation_threshold=0.25,
+            lost_track_buffer=30,
+            minimum_matching_threshold=0.8,
+            frame_rate=30,
+        )
         self.box_annotator = sv.BoxAnnotator()
         self.label_annotator = sv.LabelAnnotator()
         self.dwell_tracker = dwell_tracker or DwellTracker(zone=ZONE["Shelf A"], shelf_id=1, store_id=1, session_factory=None)
@@ -40,6 +54,10 @@ class PersonTracker:
 
     def _detect_head_directions(self, frame, detections) -> None:
         """Estimate face orientation separately for each tracked shopper."""
+        detect_face, direction_to_shelf, estimate_head_direction = _try_import_gaze_helpers()
+        if detect_face is None:
+            return
+
         frame_height, frame_width = frame.shape[:2]
         current_ids = set()
 
@@ -110,6 +128,14 @@ class PersonTracker:
 
         annotated_frame = self.box_annotator.annotate(frame, detections)
         annotated_frame = self.label_annotator.annotate(annotated_frame, detections, labels)
+
+        if self.dwell_tracker is not None:
+            annotated_frame = self.dwell_tracker.annotate_frame(annotated_frame, detections)
+
+        return annotated_frame, detections
+
+    def update(self, detections):
+        return self.tracker.update_with_detections(detections)
 
         if self.dwell_tracker is not None:
             annotated_frame = self.dwell_tracker.annotate_frame(annotated_frame, detections)

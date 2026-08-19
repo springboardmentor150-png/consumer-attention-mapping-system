@@ -11,8 +11,12 @@ __pycache__/
 .coverage
 htmlcov/
 .venv/
+.venv-api/
 venv/
 env/
+*.venv*
+*.mp4
+*.avi
 
 # Node
 node_modules/

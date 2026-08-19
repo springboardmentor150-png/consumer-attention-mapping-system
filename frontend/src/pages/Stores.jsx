@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FiEdit2, FiMapPin, FiPlus, FiTrash2 } from 'react-icons/fi';
 import DashboardLayout from '../layouts/DashboardLayout';
+import { SkeletonTable } from '../components/Skeleton';
 import { getStores, deleteStore } from '../services/storeService';
 import '../styles/Stores.css';
 
 function Stores() {
   const [stores, setStores] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   const loadStores = async () => {
@@ -16,6 +18,8 @@ function Stores() {
       setError('');
     } catch {
       setError('Unable to load stores. Please make sure the FastAPI backend is running.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,43 +52,47 @@ function Stores() {
 
         {error && <p className="stores-error" role="alert">{error}</p>}
 
-        <section className="stores-table-card" aria-label="Stores list">
-          <div className="stores-table-scroll">
-            <table className="stores-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Store Name</th>
-                  <th>Location</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {stores.length ? stores.map((store) => (
-                  <tr key={store.id}>
-                    <td>{store.id}</td>
-                    <td className="store-name">{store.store_name || store.name}</td>
-                    <td>
-                      <span className="store-location"><FiMapPin aria-hidden="true" />{store.location}</span>
-                    </td>
-                    <td>
-                      <div className="store-actions">
-                        <button type="button" className="store-action-button edit" aria-label={`Edit ${store.store_name || store.name}`} title="Edit store">
-                          <FiEdit2 aria-hidden="true" />
-                        </button>
-                        <button type="button" className="store-action-button delete" aria-label={`Delete ${store.store_name || store.name}`} title="Delete store" onClick={() => removeStore(store.id)}>
-                          <FiTrash2 aria-hidden="true" />
-                        </button>
-                      </div>
-                    </td>
+        {loading ? (
+          <SkeletonTable rows={5} cols={4} />
+        ) : (
+          <section className="stores-table-card" aria-label="Stores list">
+            <div className="stores-table-scroll">
+              <table className="stores-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Store Name</th>
+                    <th>Location</th>
+                    <th>Actions</th>
                   </tr>
-                )) : (
-                  <tr><td className="stores-empty" colSpan="4">No stores yet. Add your first store to get started.</td></tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </section>
+                </thead>
+                <tbody>
+                  {stores.length ? stores.map((store) => (
+                    <tr key={store.id}>
+                      <td>{store.id}</td>
+                      <td className="store-name">{store.store_name || store.name}</td>
+                      <td>
+                        <span className="store-location"><FiMapPin aria-hidden="true" />{store.location}</span>
+                      </td>
+                      <td>
+                        <div className="store-actions">
+                          <button type="button" className="store-action-button edit" aria-label={`Edit ${store.store_name || store.name}`} title="Edit store">
+                            <FiEdit2 aria-hidden="true" />
+                          </button>
+                          <button type="button" className="store-action-button delete" aria-label={`Delete ${store.store_name || store.name}`} title="Delete store" onClick={() => removeStore(store.id)}>
+                            <FiTrash2 aria-hidden="true" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  )) : (
+                    <tr><td className="stores-empty" colSpan="4">No stores yet. Add your first store to get started.</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
       </main>
     </DashboardLayout>
   );

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { loginUser } from '../services/authService';
+import { getDashboardPathForRole } from '../utils/roleUtils';
 import '../styles/Login.css';
 
 export default function Login() {
@@ -29,23 +30,28 @@ export default function Login() {
     try {
       const { data } = await loginUser({ email, password });
       const token = data.access_token || data.token || data.accessToken;
+      const returnedUser = data.user || { email, role: 'admin', name: email.split('@')[0] };
 
       if (!token) {
         throw new Error('No authentication token returned from server.');
       }
 
       window.localStorage.setItem('authToken', token);
-      window.localStorage.setItem('authUser', JSON.stringify({ email }));
-      setUser({ email });
+      window.localStorage.setItem('authUser', JSON.stringify(returnedUser));
+      setUser(returnedUser);
 
       setSuccessMessage('Login successful! Redirecting to dashboard...');
-      window.setTimeout(() => navigate('/dashboard'), 700);
+      
+      // Role-based routing
+      const dashboardPath = getDashboardPathForRole(returnedUser.role);
+      window.setTimeout(() => navigate(dashboardPath), 700);
     } catch (submitError) {
-      setError(
-        submitError.response?.data?.detail ||
-          submitError.message ||
-          'Login Failed'
-      );
+      // Friendly network / server error messages
+      if (submitError.message === 'Network Error' || !submitError.response) {
+        setError('Unable to reach the server. Is the backend running at http://127.0.0.1:8000 ?');
+      } else {
+        setError(submitError.response?.data?.detail || submitError.message || 'Login Failed');
+      }
     } finally {
       setLoading(false);
     }
