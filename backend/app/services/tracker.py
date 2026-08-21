@@ -87,4 +87,4 @@ def run_tracker(source=0):
 
 
 if __name__ == "__main__":
-    run_tracker("test_video.mp4")
+    run_tracker("backend/test_video.mp4")
