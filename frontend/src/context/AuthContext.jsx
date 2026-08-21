@@ -1,44 +1,28 @@
-import React, { createContext, useContext, useState } from 'react';
-import axios from 'axios';
+import { createContext, useContext, useMemo, useState } from 'react';
 
-const AuthContext = createContext(null);
+const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+function getStoredUser() {
+  if (typeof window === 'undefined') {
+    return null;
+  }
 
-  const login = async (email, password) => {
-    try {
-      const response = await axios.post('http://127.0.0.1:8000/api/auth/login', {
-        email,
-        password,
-      });
+  try {
+    const storedUser = window.localStorage.getItem('authUser');
+    return storedUser ? JSON.parse(storedUser) : null;
+  } catch {
+    return null;
+  }
+}
 
-      setUser(response.data.user);
-      return response.data.user;
-    } catch (err) {
-      // Extract FastAPI detail arrays gracefully
-      const detail = err.response?.data?.detail;
-      let errorMsg = 'Authentication failed';
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(getStoredUser);
 
-      if (Array.isArray(detail)) {
-        errorMsg = detail.map((e) => `${e.loc[1]}: ${e.msg}`).join(', ');
-      } else if (typeof detail === 'string') {
-        errorMsg = detail;
-      } else if (err.message) {
-        errorMsg = err.message;
-      }
+  const value = useMemo(() => ({ user, setUser }), [user]);
 
-      throw new Error(errorMsg);
-    }
-  };
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
 
-  const logout = () => setUser(null);
-
-  return (
-    <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
-
-export const useAuth = () => useContext(AuthContext);
+export function useAuth() {
+  return useContext(AuthContext);
+}

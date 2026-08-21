@@ -216,3 +216,20 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Node / Frontend
+node_modules/
+dist/
+
+# Python Virtual Environments & Cache
+.venv*
+venv/
+env/
+
+# SQLite databases
+*.db
+*.sqlite3
+
+# Uploaded media
+videos/
+

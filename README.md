@@ -1,180 +1,123 @@
-# 🛒 Consumer Attention Mapping System
-Infosys Internship - Consumer Attention Mapping System
+# Consumer Attention Mapping System
 
- **Transforming retail video into intelligent business decisions using Artificial Intelligence.**
+A full-stack application for analysing in-store shopper attention from camera feeds. It combines computer-vision tracking with a React dashboard to help teams understand dwell time, shelf engagement, customer paths, heatmaps, and product attractiveness.
 
-Consumer Attention Mapping System (CAMS) is an AI-powered retail analytics platform that helps retailers understand how customers interact with products, shelves, and store layouts. By combining computer vision, behavioral analytics, and deep learning, the system converts raw surveillance footage into meaningful insights that support smarter merchandising and better customer experiences.
+## Features
 
----
+- Live camera management and video-based shopper tracking
+- Attention, dwell-time, gaze, and zone analysis
+- Store and shelf management
+- Interactive dashboards for different user roles
+- Heatmaps, customer paths, analytics, recommendations, and reports
+- FastAPI REST API with PostgreSQL persistence
 
-# 🌟 Why CAMS?
+## Tech stack
 
-Retail stores often know **what customers buy**, but rarely understand **how customers behave before making a purchase**.
+- **Frontend:** React, Vite, React Router, Chart.js, Recharts, Axios
+- **Backend:** Python, FastAPI, SQLAlchemy, Uvicorn
+- **Computer vision:** OpenCV, MediaPipe, Ultralytics YOLO, Supervision
+- **Database:** PostgreSQL (SQLite-compatible schema support is included)
+- **Containerisation:** Docker Compose
 
-CAMS bridges this gap by answering questions such as:
-
-* Which shelves attract the most attention?
-* Which products are frequently viewed but rarely purchased?
-* Where do customers spend the most time?
-* Which store areas receive the highest foot traffic?
-* How can shelf layouts be optimized to improve sales?
-
-These insights enable retailers to make informed business decisions backed by AI-driven analytics.
-
----
-
-# 🚀 Core Capabilities
-
-### 👤 Smart Shopper Tracking
-
-Identify and track customers throughout the store while analyzing movement paths and shopping sessions.
-
-### 👀 Attention Intelligence
-
-Estimate customer gaze, monitor shelf engagement, and calculate attention duration for products and promotional displays.
-
-### 🛍 Product Interaction Monitoring
-
-Detect product pickups, returns, comparisons, and other customer interactions with shelves.
-
-### 📊 Behavioral Analytics
-
-Analyze shopping patterns, customer journeys, and engagement trends to better understand consumer behavior.
-
-### 🔥 Retail Heatmaps
-
-Generate visual heatmaps that highlight high-traffic areas, customer attention zones, and engagement hotspots.
-
-### 💡 AI Recommendations
-
-Provide intelligent suggestions for shelf placement, product visibility, promotional displays, and store layout optimization.
-
----
-
-# ⚙️ Technology Stack
-
-## Backend
-
-* Python
-* FastAPI
-* PostgreSQL
-* MongoDB
-* Redis
-* SQLAlchemy
-* Alembic
-
-## Frontend
-
-* React
-* Next.js
-* TypeScript
-* Tailwind CSS
-* Redux Toolkit
-
-## Artificial Intelligence
-
-* YOLOv8
-* OpenCV
-* MediaPipe
-* PyTorch
-* TensorFlow
-* Scikit-learn
-* DeepSORT
-* ByteTrack
-
-## Deployment
-
-* Docker
-* AWS / Azure
-* GitHub Actions
-
----
-
-# 🏛 System Workflow
+## Project structure
 
 ```text
-Retail Camera
-      │
-      ▼
-Video Capture
-      │
-      ▼
-Consumer Detection
-      │
-      ▼
-Attention Analysis
-      │
-      ▼
-Behavior Analytics
-      │
-      ▼
-Recommendation Engine
-      │
-      ▼
-Interactive Dashboard
-```
-
----
-
-# 📂 Repository Structure
-
-```text
-Consumer-Attention-Mapping-System/
-
-├── backend/
+consumer-attention-mapping-system/
+│
 ├── frontend/
-├── datasets/
-├── models/
-├── scripts/
-├── docs/
-└── README.md
+│   ├── src/
+│   ├── public/
+│   └── package.json
+│
+├── backend/
+│   ├── app/
+│   ├── routers/
+│   ├── models/
+│   └── requirements.txt
+│
+├── .gitignore
+├── docker-compose.yml
+├── README.md
+└── LICENSE
 ```
 
----
+## Prerequisites
 
-# 🎯 Key Objectives
+- Python 3.11 or later
+- Node.js 18 or later
+- PostgreSQL 16 (or Docker)
 
-* Monitor consumer movement inside retail stores
-* Measure customer attention and engagement
-* Analyze product interaction patterns
-* Generate actionable retail intelligence
-* Improve merchandising decisions using AI
-* Support data-driven store optimization
+## Run with Docker
 
----
+Docker Compose starts the API and PostgreSQL database:
 
-# 📈 Development Roadmap
+```bash
+docker compose up --build
+```
 
-| Milestone                                                 | Timeline     | What We Do                                                                                                                                                                                                                                   |
-| --------------------------------------------------------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Milestone 1 – Foundation & Core Setup**                 | **Week 1–2** | Set up the project architecture, design the database schema, implement authentication with Role-Based Access Control (RBAC), develop Store & Shelf Management modules, and integrate retail camera feeds.                                    |
-| **Milestone 2 – Consumer Detection & Attention Analysis** | **Week 3–4** | Build the shopper detection and tracking engine, implement gaze estimation, analyze shelf engagement, calculate dwell time, and generate customer attention analytics.                                                                       |
-| **Milestone 3 – Behavioral Intelligence & Optimization**  | **Week 5–6** | Develop consumer behavior analytics, generate retail attention heatmaps, implement product attractiveness scoring, build the AI recommendation engine, and create retail intelligence dashboards.                                            |
-| **Milestone 4 – Analytics, Testing & Deployment**         | **Week 7–8** | Integrate the complete application, develop executive dashboards and reports, perform testing and validation, optimize system performance, containerize the application using Docker, and deploy it to cloud platforms such as AWS or Azure. |
+The API is available at `http://localhost:8000`. Stop the services with `docker compose down`.
 
----
+## Run locally
 
-# 📊 Expected Impact
+### 1. Configure and start the backend
 
-The platform is designed to help retailers:
+```bash
+cd backend
+python -m venv .venv
+```
 
-* Increase product visibility
-* Improve customer engagement
-* Optimize shelf placement
-* Understand shopping behavior
-* Enhance marketing effectiveness
-* Support intelligent retail decision-making
+Activate the virtual environment:
 
----
+```bash
+# Windows PowerShell
+.\.venv\Scripts\Activate.ps1
 
-# 🔮 Future Scope
+# macOS/Linux
+source .venv/bin/activate
+```
 
-* Multi-store analytics
-* Predictive customer behavior
-* AI-powered demand forecasting
-* Smart inventory recommendations
-* Edge AI deployment
-* Mobile analytics dashboard
+Install dependencies and configure the database URL:
 
----
+```bash
+pip install -r requirements.txt
+copy .env.example .env    # Windows
+# cp .env.example .env    # macOS/Linux
+```
 
+Set `DATABASE_URL` in `.env` to your PostgreSQL instance, then run:
+
+```bash
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+The API initialises its schema and seed data at startup. Visit `http://localhost:8000/docs` for the interactive OpenAPI documentation.
+
+### 2. Start the frontend
+
+In a new terminal:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open the address printed by Vite (normally `http://localhost:5173`).
+
+## Useful commands
+
+```bash
+# Build the frontend for production
+cd frontend && npm run build
+
+# Run backend tests
+cd backend && pytest
+```
+
+## Configuration
+
+The backend reads its database connection from `DATABASE_URL`. A local example is provided in [`backend/.env.example`](backend/.env.example). Keep real credentials in `backend/.env`, which is ignored by Git.
+
+## License
+
+This project is licensed under the terms in [LICENSE](LICENSE).
