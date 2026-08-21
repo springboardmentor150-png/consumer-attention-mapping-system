@@ -448,25 +448,7 @@ Core endpoints include:
 
 # Current Progress
 
-### Milestone 1 & 2 Completed
-
-- Project Initialization
-- Backend Architecture
-- Frontend Dashboard
-- Authentication System
-- Role-Based Access Control
-- PostgreSQL Integration
-- MongoDB Integration
-- Redis Integration
-- Store Management APIs
-- Shelf Management APIs
-- Camera Management APIs
-- Video Stream Integration
-- YOLOv8 Person Detection
-- ByteTrack Tracking
-- Attention Mapping & Gaze Estimation
-- Dwell Time Analytics
-- Real-time Frontend Dashboard
+### Milestone 1, 2,3 & 4 are Completed
 
 ---
 
