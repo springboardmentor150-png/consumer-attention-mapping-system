@@ -1,152 +1,188 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import React from "react";
+import { NavLink } from "react-router-dom";
+
 import {
-  FiHome,
-  FiTv,
-  FiBriefcase,
-  FiGrid,
-  FiShoppingBag,
-  FiLayers,
-  FiVideo,
-  FiTrendingUp,
-  FiFileText,
-  FiMapPin,
-  FiZap,
-  FiUser,
-  FiLogOut,
-  FiX
-} from 'react-icons/fi';
-import { useAuth } from '../context/AuthContext';
-import { normalizeRole, getDashboardPathForRole } from '../utils/roleUtils';
-import '../styles/Sidebar.css';
+  LayoutDashboard,
+  Store,
+  Package,
+  Camera,
+  Users,
+  BarChart3,
+  Settings,
+  LogOut,
+} from "lucide-react";
 
-export default function Sidebar({ isOpen, onClose }) {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { user, setUser } = useAuth();
-  const role = normalizeRole(user?.role);
-  const dashboardPath = getDashboardPathForRole(role);
+import "../styles/Sidebar.css";
 
-  const initials = (user?.name || user?.email || 'U')
-    .split(/[\s@]/)
-    .filter(Boolean)
-    .map((part) => part[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase() || 'U';
+function Sidebar() {
 
-  const roleDisplayName = role ? role.charAt(0).toUpperCase() + role.slice(1) : 'User';
-
-  const menuSections = [
-    {
-      title: 'Overview',
-      items: [
-        { icon: FiHome, label: 'Main Dashboard', path: dashboardPath },
-        { icon: FiTv, label: 'Live CCTV Monitor', path: '/live-dashboard' },
-        { icon: FiBriefcase, label: 'Manager Dashboard', path: '/manager-dashboard' },
-        { icon: FiGrid, label: 'Analyst Dashboard', path: '/analyst-dashboard' },
-      ]
-    },
-    {
-      title: 'Management',
-      items: [
-        ...(role === 'admin' || role === 'manager'
-          ? [
-              { icon: FiShoppingBag, label: 'Stores', path: '/stores' },
-              { icon: FiLayers, label: 'Shelves', path: '/shelves' },
-              { icon: FiVideo, label: 'Cameras', path: '/cameras' },
-            ]
-          : [])
-      ]
-    },
-    {
-      title: 'Analytics & Insights',
-      items: [
-        { icon: FiTrendingUp, label: 'Analytics', path: '/analytics' },
-        { icon: FiFileText, label: 'Reports', path: '/reports' },
-        { icon: FiMapPin, label: 'Heatmap', path: '/heatmap' },
-        { icon: FiZap, label: 'Recommendations', path: '/recommendations' },
-      ]
-    },
-
-    {
-      title: 'Account',
-      items: [
-        { icon: FiUser, label: 'Profile', path: '/profile' },
-      ]
-    }
-  ].filter((section) => section.items.length > 0);
+  // =====================================================
+  // LOGOUT
+  // =====================================================
 
   const handleLogout = () => {
-    window.localStorage.removeItem('authToken');
-    window.localStorage.removeItem('authUser');
-    setUser(null);
-    navigate('/');
+    localStorage.removeItem("token");
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("user");
+
+    // Only this button logs out
+    window.location.href = "/";
   };
 
-  const handleNavClick = (path) => {
-    if (path !== '#') {
-      navigate(path);
-      if (onClose) onClose();
-    }
-  };
+
+  // =====================================================
+  // SIDEBAR MENU
+  // =====================================================
+
+  const menuItems = [
+    {
+      name: "Dashboard",
+      path: "/dashboard",
+      icon: LayoutDashboard,
+      active: true,
+    },
+
+    {
+      name: "Stores",
+      icon: Store,
+    },
+
+    {
+      name: "Shelves",
+      icon: Package,
+    },
+
+    {
+      name: "Cameras",
+      icon: Camera,
+    },
+
+    {
+      name: "Consumers",
+      icon: Users,
+    },
+
+    {
+      name: "Reports",
+      icon: BarChart3,
+    },
+
+    {
+      name: "Settings",
+      icon: Settings,
+    },
+  ];
+
 
   return (
-    <>
-      {isOpen && <div className="sidebar-overlay" onClick={onClose} aria-hidden="true" />}
-      <aside className={`sidebar ${isOpen ? 'sidebar-open' : ''}`}>
-        <div className="sidebar-brand">
-          <div className="sidebar-brand-logo">
-            <FiShoppingBag aria-hidden="true" />
-            <h2>Retail AI</h2>
-          </div>
-          {onClose && (
-            <button className="sidebar-close-btn" onClick={onClose} aria-label="Close sidebar">
-              <FiX />
+    <aside className="sidebar">
+
+      {/* =================================================
+          LOGO
+      ================================================= */}
+
+      <div className="sidebar-header">
+
+        <div className="sidebar-logo">
+          <span className="sidebar-logo-text">
+            Consumer
+            <br />
+            Attention
+            <br />
+            Mapping
+          </span>
+        </div>
+
+      </div>
+
+
+      {/* =================================================
+          MENU
+      ================================================= */}
+
+      <nav className="sidebar-nav">
+
+        {menuItems.map((item) => {
+
+          const Icon = item.icon;
+
+          // Dashboard is the only menu item that
+          // currently has a working page.
+          if (item.active) {
+
+            return (
+              <NavLink
+                key={item.name}
+                to="/dashboard"
+                className={({ isActive }) =>
+                  `sidebar-item ${isActive ? "active" : ""}`
+                }
+              >
+
+                <Icon size={21} />
+
+                <span>
+                  {item.name}
+                </span>
+
+              </NavLink>
+            );
+          }
+
+
+          // =================================================
+          // OTHER MENU ITEMS
+          // No navigation yet, so they CANNOT logout.
+          // =================================================
+
+          return (
+            <button
+              key={item.name}
+              type="button"
+              className="sidebar-item sidebar-disabled"
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+            >
+
+              <Icon size={21} />
+
+              <span>
+                {item.name}
+              </span>
+
             </button>
-          )}
-        </div>
+          );
 
-        <nav className="sidebar-menu">
-          {menuSections.map((section) => (
-            <div key={section.title} className="sidebar-section">
-              <div className="sidebar-section-title">{section.title}</div>
-              {section.items.map((item) => {
-                const Icon = item.icon;
-                const isActive =
-                  location.pathname === item.path ||
-                  (item.path !== '/' && item.path !== dashboardPath && location.pathname.startsWith(item.path + '/'));
-                return (
-                  <button
-                    key={item.label}
-                    className={`sidebar-menu-item ${isActive ? 'active' : ''}`}
-                    onClick={() => handleNavClick(item.path)}
-                  >
-                    <span className="sidebar-icon">
-                      <Icon />
-                    </span>
-                    <span className="sidebar-label">{item.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          ))}
-        </nav>
+        })}
 
-        <div className="sidebar-footer">
-          <div className="sidebar-user-card">
-            <div className="sidebar-user-avatar">{initials}</div>
-            <div className="sidebar-user-info">
-              <span className="sidebar-user-name">{user?.name || user?.email?.split('@')[0] || 'User'}</span>
-              <span className="sidebar-user-role">{roleDisplayName}</span>
-            </div>
-          </div>
-          <button className="sidebar-logout" onClick={handleLogout} title="Logout">
-            <FiLogOut aria-hidden="true" />
-            <span>Logout</span>
-          </button>
-        </div>
-      </aside>
-    </>
+      </nav>
+
+
+      {/* =================================================
+          LOGOUT - ONLY THIS BUTTON LOGS OUT
+      ================================================= */}
+
+      <div className="sidebar-footer">
+
+        <button
+          type="button"
+          className="sidebar-logout"
+          onClick={handleLogout}
+        >
+
+          <LogOut size={21} />
+
+          <span>
+            Logout
+          </span>
+
+        </button>
+
+      </div>
+
+    </aside>
   );
 }
 
+export default Sidebar;

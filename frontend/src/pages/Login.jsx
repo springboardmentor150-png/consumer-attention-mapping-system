@@ -1,150 +1,134 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { loginUser } from '../services/authService';
-import { getDashboardPathForRole } from '../utils/roleUtils';
-import '../styles/Login.css';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import api from "../services/api";
+import "../styles/Auth.css";
 
-export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
-  const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const { setUser } = useAuth();
+function Login() {
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setError('');
-    setSuccessMessage('');
+    const navigate = useNavigate();
 
-    if (!email || !password) {
-      setError('Please enter both email and password.');
-      return;
-    }
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
 
-    setLoading(true);
+    const login = async () => {
 
-    try {
-      const { data } = await loginUser({ email, password });
-      const token = data.access_token || data.token || data.accessToken;
-      const returnedUser = data.user || { email, role: 'admin', name: email.split('@')[0] };
+        if (!email) {
+            alert("Email is required");
+            return;
+        }
 
-      if (!token) {
-        throw new Error('No authentication token returned from server.');
-      }
+        if (!password) {
+            alert("Password is required");
+            return;
+        }
 
-      window.localStorage.setItem('authToken', token);
-      window.localStorage.setItem('authUser', JSON.stringify(returnedUser));
-      setUser(returnedUser);
+        try {
 
-      setSuccessMessage('Login successful! Redirecting to dashboard...');
-      
-      // Role-based routing
-      const dashboardPath = getDashboardPathForRole(returnedUser.role);
-      window.setTimeout(() => navigate(dashboardPath), 700);
-    } catch (submitError) {
-      // Friendly network / server error messages
-      if (submitError.message === 'Network Error' || !submitError.response) {
-        setError('Unable to reach the server. Is the backend running at http://127.0.0.1:8000 ?');
-      } else {
-        setError(submitError.response?.data?.detail || submitError.message || 'Login Failed');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+            const response = await api.post("/auth/login", {
+                email,
+                password,
+            });
 
-  return (
-    <div className="login-page">
-      <div className="login-card">
-        <div className="login-brandArea">
-          <div className="login-brandIcon">👁️</div>
-          <div>
-            <h1 className="login-title">Consumer Attention</h1>
-            <p className="login-subtitle">AI Powered Retail Analytics</p>
-          </div>
+            localStorage.setItem("token", response.data.access_token);
+            localStorage.setItem("role", response.data.role_id);
+            localStorage.setItem("username", response.data.username);
+            localStorage.setItem("email", response.data.email);
+
+            navigate("/dashboard");
+
+        } catch (error) {
+
+            console.log(error);
+
+            alert("Invalid Email or Password");
+
+        }
+
+    };
+
+    return (
+
+        <div className="auth-container">
+
+            <div className="auth-card">
+
+                <h1 className="title">
+                    Consumer Attention System
+                </h1>
+
+                <p className="subtitle">
+                    Welcome Back!
+                </p>
+
+                <div className="form-group">
+
+                    <label>
+                        Email
+                        <span className="required">*</span>
+                    </label>
+
+                    <input
+                        type="email"
+                        placeholder="Enter your email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+
+                </div>
+
+                <div className="form-group">
+
+                    <label>
+                        Password
+                        <span className="required">*</span>
+                    </label>
+
+                    <div className="password-container">
+
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Enter your password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+
+                        <button
+                            type="button"
+                            className="eye-btn"
+                            onClick={() => setShowPassword(!showPassword)}
+                        >
+                            {showPassword ? <FaEyeSlash /> : <FaEye />}
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <button
+                    className="login-btn"
+                    onClick={login}
+                >
+                    Login
+                </button>
+
+                <p className="bottom-text">
+                    Don't have an account?
+                    <Link
+                        to="/register"
+                        className="link"
+                    >
+                        Register Here
+                    </Link>
+                </p>
+
+            </div>
+
         </div>
 
-        <div className="login-formWrapper">
-          <div className="login-header">
-            <h2 className="login-heading">Login</h2>
-            <p className="login-description">Welcome back! Please login to continue.</p>
-          </div>
+    );
 
-          <form onSubmit={handleSubmit} className="login-form">
-            {error && <div className="login-errorMessage">{error}</div>}
-            {successMessage && <div className="login-successMessage">{successMessage}</div>}
-
-            <div className="login-fieldGroup">
-              <label className="login-label" htmlFor="email">Email</label>
-              <div className="login-inputWrapper">
-                <span className="login-inputIcon">📧</span>
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  className="login-input"
-                  autoComplete="email"
-                />
-              </div>
-            </div>
-
-            <div className="login-fieldGroup">
-              <label className="login-label" htmlFor="password">Password</label>
-              <div className="login-inputWrapper">
-                <span className="login-inputIcon">🔒</span>
-                <input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  className="login-input"
-                  autoComplete="current-password"
-                />
-                <span className="login-eyeIcon">👁️</span>
-              </div>
-            </div>
-
-            <div className="login-rowBetween">
-              <label className="login-checkboxLabel">
-                <input
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="login-checkbox"
-                />
-                Remember me
-              </label>
-              <Link to="#" className="login-forgotLink">Forgot Password?</Link>
-            </div>
-
-            <button type="submit" className="login-primaryButton" disabled={loading}>
-              {loading ? 'Signing in...' : 'Login'}
-            </button>
-          </form>
-
-          <div className="login-divider">
-            <span className="login-dividerLine" />
-            <span className="login-dividerText">or</span>
-            <span className="login-dividerLine" />
-          </div>
-
-          <button type="button" className="login-secondaryButton">
-            <span className="login-googleIcon">G</span> Login with Google
-          </button>
-
-          <p className="login-footerText">
-            Don’t have an account?{' '}
-            <Link to="/register" className="login-registerLink">Register here</Link>
-          </p>
-        </div>
-      </div>
-    </div>
-  );
 }
+
+export default Login;
