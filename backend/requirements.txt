@@ -1,13 +1,5 @@
 fastapi
 uvicorn
-sqlalchemy
+sqlmodel
 psycopg2-binary
-pydantic
-opencv-python
-mediapipe
-ultralytics
-supervision
-numpy
-scipy
-filterpy
-lap
+passlib[bcrypt]

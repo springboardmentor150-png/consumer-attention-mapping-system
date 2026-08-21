@@ -1,35 +1,50 @@
-import { Line } from 'react-chartjs-2';
-import { useEffect, useState } from 'react';
-import { getAttentionHistory } from '../services/analyticsService';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 export default function AttentionChart() {
-  const [chartData, setChartData] = useState({ labels: [], datasets: [] });
+  const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
-    getAttentionHistory().then((res) => {
-      setChartData({
-        labels: res.data.labels,
-        datasets: [
-          {
-            label: 'Attention',
-            data: res.data.values,
-            borderColor: '#14b8a6',
-            backgroundColor: 'rgba(20, 184, 166, 0.2)',
-            tension: 0.3,
-          },
-        ],
-      });
-    });
+    axios.get('http://127.0.0.1:8000/api/analytics/attention')
+      .then(res => {
+        const data = res.data.data;
+        const labels = data.map(item => item.shelf_id);
+        const dwellTimes = data.map(item => item.avg_dwell_time_seconds);
+
+        setChartData({
+          labels,
+          datasets: [
+            {
+              label: 'Avg Dwell Time (Seconds)',
+              data: dwellTimes,
+              backgroundColor: 'rgba(54, 162, 235, 0.6)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1,
+            },
+          ],
+        });
+      })
+      .catch(err => console.error("Error fetching attention analytics:", err));
   }, []);
 
+  if (!chartData) return <p style={{ textAlign: 'center', marginTop: '20px' }}>Loading attention analytics...</p>;
+
   return (
-    <section className="panel-card">
-      <div className="panel-header">
-        <h2>Attention Trend</h2>
-      </div>
-      <div className="chart-wrapper">
-        <Line data={chartData} options={{ responsive: true, maintainAspectRatio: false }} />
-      </div>
-    </section>
+    <div style={{ width: '80%', margin: '0 auto', paddingTop: '20px' }}>
+      <h2 style={{ textAlign: 'center' }}>Store Shelf Dwell Time Analytics</h2>
+      <Bar data={chartData} />
+    </div>
   );
 }
