@@ -22,10 +22,23 @@ A full-stack application for analysing in-store shopper attention from camera fe
 ## Project structure
 
 ```text
-.
-├── backend/       # FastAPI application, AI modules, database models, and tests
-├── frontend/      # React + Vite dashboard
-└── docker-compose.yml
+consumer-attention-mapping-system/
+│
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   └── package.json
+│
+├── backend/
+│   ├── app/
+│   ├── routers/
+│   ├── models/
+│   └── requirements.txt
+│
+├── .gitignore
+├── docker-compose.yml
+├── README.md
+└── LICENSE
 ```
 
 ## Prerequisites
