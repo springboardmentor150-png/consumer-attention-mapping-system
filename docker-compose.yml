@@ -1,0 +1,32 @@
+name: consumer-attention-mapping-system
+
+services:
+  backend:
+    image: python:3.11-slim
+    working_dir: /app/backend
+    command: >
+      sh -c "pip install --no-cache-dir -r requirements.txt &&
+      uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+    environment:
+      PYTHONPATH: /app/backend
+      DATABASE_URL: postgresql+psycopg2://consumer:consumer@postgres:5432/consumer_attention
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app/backend
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: consumer_attention
+      POSTGRES_USER: consumer
+      POSTGRES_PASSWORD: consumer
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

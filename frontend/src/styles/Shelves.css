@@ -1,0 +1,62 @@
+.shelves-page {
+  min-height: calc(100vh - 92px);
+  padding: 34px 32px;
+  background: #f6f8fc;
+}
+
+.shelves-panel {
+  min-height: 466px;
+  padding: 39px 30px 34px;
+  border: 1px solid #e7ebf3;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(22, 36, 62, .06);
+}
+
+.shelves-page-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-bottom: 27px; }
+.shelves-page-header h1 { margin: 0; color: #16213a; font-size: 37px; line-height: 1.18; font-weight: 700; letter-spacing: 0; }
+.shelves-page-header p { margin: 12px 0 0; color: #4f6180; font-size: 18px; line-height: 1.4; }
+
+.add-shelf-button { display: inline-flex; align-items: center; gap: 10px; padding: 13px 20px; border-radius: 7px; background: #0d4fc7; box-shadow: 0 8px 16px rgba(13, 79, 199, .2); color: #fff; font-size: 17px; font-weight: 600; text-decoration: none; }
+.add-shelf-button:hover { background: #0a43ab; color: #fff; }
+.add-shelf-button svg { font-size: 23px; }
+
+.shelves-error { margin: -7px 0 20px; padding: 12px 16px; border-radius: 7px; background: #fff1f1; color: #ca3434; }
+.shelves-table-card { overflow: hidden; border: 1px solid #dfe5ef; border-radius: 9px; background: #fff; }
+.shelves-table { width: 100%; border-collapse: collapse; color: #172235; font-size: 17px; }
+.shelves-table th { height: 74px; padding: 0 28px; border-bottom: 1px solid #e4e9f1; color: #4c5d7a; font-size: 15px; font-weight: 700; text-align: left; text-transform: uppercase; }
+.shelves-table td { height: 101px; padding: 0 28px; border-bottom: 1px solid #e6ebf3; vertical-align: middle; }
+.shelves-table tbody tr:last-child td { border-bottom: 0; }
+.shelves-table th:first-child, .shelves-table td:first-child { width: 10%; }
+.shelves-table th:nth-child(2), .shelves-table td:nth-child(2) { width: 30%; }
+.shelves-table th:nth-child(3), .shelves-table td:nth-child(3) { width: 20%; }
+.shelves-table th:nth-child(4), .shelves-table td:nth-child(4) { width: 25%; }
+.shelf-name { font-weight: 500; }
+.shelf-category, .shelf-store { display: inline-flex; align-items: center; min-height: 40px; padding: 7px 13px; border: 1px solid; border-radius: 7px; font-size: 16px; white-space: nowrap; }
+.shelf-category { border-color: #c7dcff; background: #edf4ff; color: #0c49ca; }
+.shelf-store { border-color: #c6efcf; background: #eaf9ec; color: #14802d; }
+.shelf-actions { display: flex; gap: 12px; }
+.shelf-action-button { display: grid; width: 52px; height: 52px; place-items: center; border: 1px solid #dfe5ef; border-radius: 11px; background: #fff; cursor: pointer; font-size: 21px; }
+.shelf-action-button:hover { background: #f5f8fe; }
+.shelf-action-button.edit { color: #0d56e4; }
+.shelf-action-button.delete { color: #ff3636; }
+.shelves-empty { height: auto !important; padding: 40px !important; color: #71809a; text-align: center; }
+
+.shelves-pagination { display: flex; justify-content: center; margin-top: 50px; }
+.shelves-pagination button { display: grid; width: 52px; height: 52px; place-items: center; border: 1px solid #dfe5ef; border-right: 0; background: #fff; color: #53647e; cursor: pointer; font-size: 19px; }
+.shelves-pagination button:first-child { border-radius: 8px 0 0 8px; }
+.shelves-pagination button:last-child { border-right: 1px solid #dfe5ef; border-radius: 0 8px 8px 0; }
+.shelves-pagination button.active { background: #0d4fc7; border-color: #0d4fc7; color: #fff; }
+.shelves-pagination button:disabled { cursor: not-allowed; opacity: .5; }
+
+@media (max-width: 760px) {
+  .shelves-page { padding: 20px 16px; }
+  .shelves-panel { min-height: 0; padding: 27px 18px; }
+  .shelves-page-header h1 { font-size: 31px; }
+  .shelves-page-header p { font-size: 16px; }
+  .add-shelf-button { padding: 12px; font-size: 0; }
+  .add-shelf-button svg { font-size: 22px; }
+  .shelves-table-scroll { overflow-x: auto; }
+  .shelves-table { min-width: 840px; }
+  .shelves-table th, .shelves-table td { padding: 0 22px; }
+}

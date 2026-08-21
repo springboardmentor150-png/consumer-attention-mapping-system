@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+pydantic
+opencv-python
+mediapipe
+ultralytics
+supervision
+numpy
+scipy
+filterpy
+lap
