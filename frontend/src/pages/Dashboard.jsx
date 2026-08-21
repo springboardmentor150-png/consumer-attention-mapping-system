@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { Bar } from "react-chartjs-2";
-import "../styles/dashboard.css";
+import "../styles/Dashboard.css";
 
 import {
   Chart as ChartJS,

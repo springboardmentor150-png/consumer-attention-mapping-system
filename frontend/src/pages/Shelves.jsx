@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
-import "../styles/stores.css";
+import "../styles/Stores.css";
 
 function Shelves() {
 
