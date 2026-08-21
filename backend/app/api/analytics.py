@@ -1,85 +1,55 @@
-from fastapi import APIRouter, Depends
-from sqlalchemy import func
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
-from app.database.database import get_db
-from app.models.attention_event import AttentionEvent
+from app.core.database import get_db
+from app.core.dependencies import ALL_ROLES, require_roles
+from app.crud.analytics import (
+    get_all_sessions,
+    get_summary,
+)
+from app.schemas.analytics import AnalyticsResponse
 
-router = APIRouter(prefix="/api/analytics", tags=["Analytics"])
-
-
-@router.get("/dashboard")
-def dashboard(db: Session = Depends(get_db)):
-    total_people = db.query(func.count(AttentionEvent.person_id)).scalar()
-    avg_attention = db.query(func.avg(AttentionEvent.attention_score)).scalar()
-
-    shelves = (
-        db.query(
-            AttentionEvent.shelf_id,
-            func.avg(AttentionEvent.attention_score),
-            func.avg(AttentionEvent.dwell_time),
-        )
-        .group_by(AttentionEvent.shelf_id)
-        .all()
-    )
-
-    return {
-        "total_people": total_people or 0,
-        "average_attention": round(float(avg_attention or 0), 2),
-        "shelves": [
-            {
-                "shelf": s[0],
-                "attention": round(float(s[1] or 0), 2),
-                "dwell": round(float(s[2] or 0), 2),
-            }
-            for s in shelves
-        ],
-    }
+router = APIRouter(
+    prefix="/analytics",
+    tags=["Analytics"],
+    # Read-only analytics: every signed-in role may read, nobody writes here.
+    dependencies=[Depends(require_roles(*ALL_ROLES))],
+)
 
 
-@router.get("/top-shelf")
-def top_shelf(db: Session = Depends(get_db)):
-    shelf = (
-        db.query(
-            AttentionEvent.shelf_id,
-            func.avg(AttentionEvent.attention_score).label("score"),
-        )
-        .group_by(AttentionEvent.shelf_id)
-        .order_by(func.avg(AttentionEvent.attention_score).desc())
-        .first()
-    )
+# store_id and shelf_id are optional so existing callers keep working. Omitting
+# them returns every session, which is also what keeps rows recorded before
+# analytics carried a store visible. Supplying a store_id scopes the figures to
+# that store instead of averaging across all of them.
+StoreFilter = Query(
+    default=None,
+    description="Restrict results to one store.",
+)
 
-    if shelf is None:
-        return {"top_shelf": None, "score": 0}
-
-    return {"top_shelf": shelf[0], "score": round(float(shelf[1] or 0), 2)}
+ShelfFilter = Query(
+    default=None,
+    description="Restrict results to one shelf.",
+)
 
 
-@router.get("/ranking")
-def ranking(db: Session = Depends(get_db)):
-    result = (
-        db.query(
-            AttentionEvent.shelf_id,
-            func.avg(AttentionEvent.attention_score),
-            func.count(AttentionEvent.id),
-        )
-        .group_by(AttentionEvent.shelf_id)
-        .all()
-    )
+@router.get(
+    "/",
+    response_model=list[AnalyticsResponse]
+)
+def analytics(
+    db: Session = Depends(get_db),
+    store_id: int | None = StoreFilter,
+    shelf_id: int | None = ShelfFilter,
+):
 
-    return [
-        {
-            "shelf": r[0],
-            "attention": round(float(r[1] or 0), 2),
-            "views": r[2],
-        }
-        for r in result
-    ]
+    return get_all_sessions(db, store_id=store_id, shelf_id=shelf_id)
 
 
-@router.get("/history")
-def history():
-    return {
-        "labels": ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00"],
-        "values": [72, 81, 79, 88, 91, 87],
-    }
+@router.get("/summary")
+def analytics_summary(
+    db: Session = Depends(get_db),
+    store_id: int | None = StoreFilter,
+    shelf_id: int | None = ShelfFilter,
+):
+
+    return get_summary(db, store_id=store_id, shelf_id=shelf_id)
