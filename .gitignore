@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+
+# Env
+.env
+.env.local
+*.env
+.env.example
+
+# Node
+node_modules/
+.next/
+out/
+
+# ML weights
+ml_models/weights/*.pt
+ml_models/weights/*.pth
+ml_models/weights/*.onnx
+
+# Logs
+logs/*.log
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
