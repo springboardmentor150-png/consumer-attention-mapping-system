@@ -1,10 +1,8 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
-class StoreBase(BaseModel):
-    name: str
+class StoreCreate(BaseModel):
+    store_name: str
     location: str
-
-
-class StoreCreate(StoreBase):
-    pass
+    store_metadata: Optional[str] = None
