@@ -1,35 +1,86 @@
-import { Line } from 'react-chartjs-2';
-import { useEffect, useState } from 'react';
-import { getAttentionHistory } from '../services/analyticsService';
+import { useEffect, useState } from "react";
+import api from "../services/api";
 
-export default function AttentionChart() {
-  const [chartData, setChartData] = useState({ labels: [], datasets: [] });
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+import { Bar } from "react-chartjs-2";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+function AttentionChart() {
+  const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: [],
+  });
+
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getAttentionHistory().then((res) => {
+    fetchAnalytics();
+  }, []);
+
+  const fetchAnalytics = async () => {
+    try {
+      const response = await api.get("/analytics/attention");
+
+      const analytics = response.data.data;
+
+      const labels = analytics.map((item) => item.shelf);
+
+      const durations = analytics.map((item) => item.duration);
+
       setChartData({
-        labels: res.data.labels,
+        labels,
         datasets: [
           {
-            label: 'Attention',
-            data: res.data.values,
-            borderColor: '#14b8a6',
-            backgroundColor: 'rgba(20, 184, 166, 0.2)',
-            tension: 0.3,
+            label: "Viewing Duration (seconds)",
+            data: durations,
           },
         ],
       });
-    });
-  }, []);
+    } catch (error) {
+      console.error("Analytics Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <h3>Loading Analytics...</h3>;
+  }
 
   return (
-    <section className="panel-card">
-      <div className="panel-header">
-        <h2>Attention Trend</h2>
-      </div>
-      <div className="chart-wrapper">
-        <Line data={chartData} options={{ responsive: true, maintainAspectRatio: false }} />
-      </div>
-    </section>
+    <div style={{ width: "90%", margin: "30px auto" }}>
+      <h2>Today's Shelf Attention Report</h2>
+
+      <Bar
+        data={chartData}
+        options={{
+          responsive: true,
+          plugins: {
+            legend: {
+              position: "top",
+            },
+          },
+        }}
+      />
+    </div>
   );
 }
+
+export default AttentionChart;

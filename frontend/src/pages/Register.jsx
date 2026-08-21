@@ -1,126 +1,288 @@
 import { useState } from "react";
-import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
-import "./Register.css";
+import { Link, useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import api from "../services/api";
+import "../styles/Auth.css";
 
-export default function Register() {
-  const navigate = useNavigate();
+function Register() {
 
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "admin",
-  });
+    const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [mobileNumber, setMobileNumber] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
-  };
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage("");
-    setError("");
+    const register = async () => {
 
-    try {
-      await axios.post("http://127.0.0.1:8000/auth/register", form);
-      setMessage("Registration successful! Redirecting to login...");
-      setTimeout(() => {
-        navigate("/");
-      }, 1200);
-    } catch (err) {
-      setError(err.response?.data?.detail || err.message || "Registration failed. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+        if (!username) {
+            alert("Username is required");
+            return;
+        }
 
-  return (
-    <div className="register-container">
-      <div className="register-card">
-        <h1 className="register-title">Create Your Account</h1>
-        <p className="register-description">
-          Sign up to access retail analytics, live dashboard, and customer attention reports.
-        </p>
+        if (!email) {
+            alert("Email is required");
+            return;
+        }
 
-        <form onSubmit={handleRegister} className="register-form">
-          <div className="register-field">
-            <label htmlFor="name" className="register-label">Full Name</label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              value={form.name}
-              onChange={handleChange}
-              required
-              className="register-input"
-            />
-          </div>
+        if (!mobileNumber) {
+            alert("Mobile Number is required");
+            return;
+        }
 
-          <div className="register-field">
-            <label htmlFor="email" className="register-label">Email Address</label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              value={form.email}
-              onChange={handleChange}
-              required
-              className="register-input"
-            />
-          </div>
+        if (!/^[0-9]{10}$/.test(mobileNumber)) {
+            alert("Enter a valid 10-digit Mobile Number");
+            return;
+        }
 
-          <div className="register-field">
-            <label htmlFor="password" className="register-label">Password</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              value={form.password}
-              onChange={handleChange}
-              minLength={6}
-              required
-              className="register-input"
-            />
-          </div>
+        if (!password) {
+            alert("Password is required");
+            return;
+        }
 
-          <div className="register-field">
-            <label htmlFor="role" className="register-label">Role</label>
-            <select
-              id="role"
-              name="role"
-              value={form.role}
-              onChange={handleChange}
-              className="register-select"
-            >
-              <option value="admin">Administrator</option>
-              <option value="manager">Store Manager</option>
-              <option value="analyst">Retail Analyst</option>
-              <option value="marketing">Marketing Manager</option>
-            </select>
-          </div>
+        if (!confirmPassword) {
+            alert("Confirm Password is required");
+            return;
+        }
 
-          <button type="submit" disabled={loading} className="register-button">
-            {loading ? "Registering..." : "Create Account"}
-          </button>
-        </form>
+        if (password !== confirmPassword) {
+            alert("Passwords do not match");
+            return;
+        }
 
-        {error && <p className="register-message register-error">{error}</p>}
-        {message && <p className="register-message register-success">{message}</p>}
+        try {
 
-        <p className="register-footer">
-          Already have an account?{' '}
-          <Link to="/" className="register-link">Login here</Link>
-        </p>
-      </div>
-    </div>
-  );
+            await api.post("/auth/register", {
+
+                username: username,
+                email: email,
+                mobile_number: mobileNumber,
+                password: password,
+                role_id: 2
+
+            });
+
+            alert("Registration Successful");
+
+            navigate("/");
+
+        }
+
+        catch (error) {
+
+            console.log(error);
+
+            if (error.response) {
+
+                alert(error.response.data.detail);
+
+            }
+
+            else {
+
+                alert("Registration Failed");
+
+            }
+
+        }
+
+    };
+
+    return (
+
+        <div className="auth-container">
+
+            <div className="auth-card">
+
+                <h1 className="title">
+
+                    Consumer Attention System
+
+                </h1>
+
+                <p className="subtitle">
+
+                    Create New Account
+
+                </p>
+
+                {/* Username */}
+
+                <div className="form-group">
+
+                    <label>
+
+                        Username
+                        <span className="required">*</span>
+
+                    </label>
+
+                    <input
+                        type="text"
+                        placeholder="Enter Username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
+
+                </div>
+
+                {/* Email */}
+
+                <div className="form-group">
+
+                    <label>
+
+                        Email
+                        <span className="required">*</span>
+
+                    </label>
+
+                    <input
+                        type="email"
+                        placeholder="Enter Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+
+                </div>
+
+                {/* Mobile */}
+
+                <div className="form-group">
+
+                    <label>
+
+                        Mobile Number
+                        <span className="required">*</span>
+
+                    </label>
+
+                    <input
+                        type="text"
+                        placeholder="Enter Mobile Number"
+                        value={mobileNumber}
+                        maxLength={10}
+                        onChange={(e) => setMobileNumber(e.target.value)}
+                    />
+
+                </div>
+
+                {/* Password */}
+
+                <div className="form-group">
+
+                    <label>
+
+                        Password
+                        <span className="required">*</span>
+
+                    </label>
+
+                    <div className="password-container">
+
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Enter Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+
+                        <button
+                            type="button"
+                            className="eye-btn"
+                            onClick={() => setShowPassword(!showPassword)}
+                        >
+
+                            {showPassword ? <FaEyeSlash /> : <FaEye />}
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                {/* Confirm Password */}
+
+                <div className="form-group">
+
+                    <label>
+
+                        Confirm Password
+                        <span className="required">*</span>
+
+                    </label>
+
+                    <div className="password-container">
+
+                        <input
+                            type={
+                                showConfirmPassword
+                                    ? "text"
+                                    : "password"
+                            }
+                            placeholder="Confirm Password"
+                            value={confirmPassword}
+                            onChange={(e) =>
+                                setConfirmPassword(e.target.value)
+                            }
+                        />
+
+                        <button
+                            type="button"
+                            className="eye-btn"
+                            onClick={() =>
+                                setShowConfirmPassword(
+                                    !showConfirmPassword
+                                )
+                            }
+                        >
+
+                            {
+                                showConfirmPassword
+                                    ? <FaEyeSlash />
+                                    : <FaEye />
+                            }
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <button
+                    className="login-btn"
+                    onClick={register}
+                >
+
+                    Register
+
+                </button>
+
+                <p className="bottom-text">
+
+                    Already have an account?
+
+                    <Link
+                        to="/"
+                        className="link"
+                    >
+
+                        Login Here
+
+                    </Link>
+
+                </p>
+
+            </div>
+
+        </div>
+
+    );
+
 }
+
+export default Register;
