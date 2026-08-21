@@ -233,3 +233,5 @@ env/
 # Uploaded media
 videos/
 
+backend/app/models/6DRepNet_300W_LP_AFLW2000.pth
+backend/training/

@@ -1,101 +1,272 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FiEdit2, FiMapPin, FiPlus, FiTrash2 } from 'react-icons/fi';
-import DashboardLayout from '../layouts/DashboardLayout';
-import { SkeletonTable } from '../components/Skeleton';
-import { getStores, deleteStore } from '../services/storeService';
-import '../styles/Stores.css';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../services/api";
+import "../styles/stores.css";
 
 function Stores() {
-  const [stores, setStores] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
-  const loadStores = async () => {
-    try {
-      const response = await getStores();
-      setStores(response.data);
-      setError('');
-    } catch {
-      setError('Unable to load stores. Please make sure the FastAPI backend is running.');
-    } finally {
-      setLoading(false);
-    }
-  };
+    const navigate = useNavigate();
 
-  useEffect(() => {
-    loadStores();
-  }, []);
+    // Logged-in user
+    const user = JSON.parse(localStorage.getItem("user"));
+    const role = user?.role;
 
-  const removeStore = async (id) => {
-    try {
-      await deleteStore(id);
-      loadStores();
-    } catch {
-      setError('Unable to delete this store. Please try again.');
-    }
-  };
+    const canManage =
+        role === "Admin" ||
+        role === "Store Manager";
 
-  return (
-    <DashboardLayout>
-      <main className="stores-page">
-        <section className="stores-page-header">
-          <div>
-            <h1>Stores</h1>
-            <p>Manage all your stores from here.</p>
-          </div>
-          <Link to="/add-store" className="add-store-button">
-            <FiPlus aria-hidden="true" />
-            <span>Add Store</span>
-          </Link>
-        </section>
+    const [storeName, setStoreName] = useState("");
+    const [location, setLocation] = useState("");
+    const [storeMetadata, setStoreMetadata] = useState("");
 
-        {error && <p className="stores-error" role="alert">{error}</p>}
+    const [stores, setStores] = useState([]);
+    const [shelves, setShelves] = useState([]);
 
-        {loading ? (
-          <SkeletonTable rows={5} cols={4} />
-        ) : (
-          <section className="stores-table-card" aria-label="Stores list">
-            <div className="stores-table-scroll">
-              <table className="stores-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Store Name</th>
-                    <th>Location</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {stores.length ? stores.map((store) => (
-                    <tr key={store.id}>
-                      <td>{store.id}</td>
-                      <td className="store-name">{store.store_name || store.name}</td>
-                      <td>
-                        <span className="store-location"><FiMapPin aria-hidden="true" />{store.location}</span>
-                      </td>
-                      <td>
-                        <div className="store-actions">
-                          <button type="button" className="store-action-button edit" aria-label={`Edit ${store.store_name || store.name}`} title="Edit store">
-                            <FiEdit2 aria-hidden="true" />
-                          </button>
-                          <button type="button" className="store-action-button delete" aria-label={`Delete ${store.store_name || store.name}`} title="Delete store" onClick={() => removeStore(store.id)}>
-                            <FiTrash2 aria-hidden="true" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  )) : (
-                    <tr><td className="stores-empty" colSpan="4">No stores yet. Add your first store to get started.</td></tr>
-                  )}
-                </tbody>
-              </table>
+    const [openStore, setOpenStore] = useState(null);
+
+    useEffect(() => {
+
+        const token = localStorage.getItem("access_token");
+
+        if (!token) {
+            navigate("/");
+            return;
+        }
+
+        getData();
+
+    }, [navigate]);
+
+    const getData = async () => {
+
+        try {
+
+            const storeResponse = await api.get("/stores");
+            const shelfResponse = await api.get("/shelves");
+
+            setStores(storeResponse.data);
+            setShelves(shelfResponse.data);
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+    };
+
+    const addStore = async () => {
+
+        try {
+
+            await api.post("/stores", {
+                store_name: storeName,
+                location: location,
+                store_metadata: storeMetadata
+            });
+
+            setStoreName("");
+            setLocation("");
+            setStoreMetadata("");
+
+            getData();
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+    };
+
+    const deleteStore = async (storeId) => {
+
+        const confirmDelete = window.confirm(
+            "Are you sure you want to delete this store?"
+        );
+
+        if (!confirmDelete) return;
+
+        try {
+
+            await api.delete(`/stores/${storeId}`);
+
+            getData();
+
+        } catch (error) {
+
+            console.log(error);
+            alert("Unable to delete store.");
+
+        }
+
+    };
+
+    return (
+
+        <div className="page">
+
+            <div className="page-header">
+
+                <button
+                    className="back-btn"
+                    onClick={() => navigate("/dashboard")}
+                >
+                    ← Dashboard
+                </button>
+
             </div>
-          </section>
-        )}
-      </main>
-    </DashboardLayout>
-  );
+
+            <h1 className="app-title">
+                Consumer Attention Mapping System
+            </h1>
+
+            <h2 className="page-title">
+                Store Management
+            </h2>
+
+            {canManage && (
+
+                <div className="form-card">
+
+                    <h2>Add New Store</h2>
+
+                    <input
+                        type="text"
+                        placeholder="Store Name"
+                        value={storeName}
+                        onChange={(e) => setStoreName(e.target.value)}
+                    />
+
+                    <input
+                        type="text"
+                        placeholder="Location"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                    />
+
+                    <input
+                        type="text"
+                        placeholder="Metadata (Optional)"
+                        value={storeMetadata}
+                        onChange={(e) => setStoreMetadata(e.target.value)}
+                    />
+
+                    <button
+                        className="primary-btn"
+                        onClick={addStore}
+                    >
+                        Add Store
+                    </button>
+
+                </div>
+
+            )}
+
+            <h2 className="section-title">
+                {canManage
+                    ? "Store Directory"
+                    : "Available Stores"}
+            </h2>
+
+            <div className="directory">
+
+                {stores.map((store) => (
+
+                    <div
+                        className="directory-card"
+                        key={store.id}
+                    >
+
+                        <div
+                            className="directory-header"
+                            onClick={() =>
+                                setOpenStore(
+                                    openStore === store.id
+                                        ? null
+                                        : store.id
+                                )
+                            }
+                        >
+
+                            <div>
+
+                                <h3>🏪 {store.store_name}</h3>
+
+                                <p>📍 {store.location}</p>
+
+                                {store.store_metadata && (
+                                    <p>ℹ️ {store.store_metadata}</p>
+                                )}
+
+                                {canManage && (
+
+                                    <button
+                                        className="delete-btn"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            deleteStore(store.id);
+                                        }}
+                                    >
+                                        🗑 Delete
+                                    </button>
+
+                                )}
+
+                            </div>
+
+                            <span>
+
+                                {openStore === store.id
+                                    ? "▲"
+                                    : "▼"}
+
+                            </span>
+
+                        </div>
+
+                        {openStore === store.id && (
+
+                            <div className="directory-body">
+
+                                <h4>Shelves</h4>
+
+                                {shelves
+                                    .filter(
+                                        shelf =>
+                                            shelf.store_id === store.id
+                                    )
+                                    .map((shelf) => (
+
+                                        <p key={shelf.id}>
+                                            • {shelf.zone_name}
+                                        </p>
+
+                                    ))}
+
+                                {shelves.filter(
+                                    shelf =>
+                                        shelf.store_id === store.id
+                                ).length === 0 && (
+
+                                    <p>No shelves added yet.</p>
+
+                                )}
+
+                            </div>
+
+                        )}
+
+                    </div>
+
+                ))}
+
+            </div>
+
+        </div>
+
+    );
+
 }
 
 export default Stores;

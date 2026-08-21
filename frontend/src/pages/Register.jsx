@@ -1,126 +1,105 @@
 import { useState } from "react";
-import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
-import "./Register.css";
+import { useNavigate } from "react-router-dom";
+import api from "../services/api";
+import "../styles/login.css";
 
-export default function Register() {
-  const navigate = useNavigate();
+function Register() {
 
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "admin",
-  });
+    const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [roleId, setRoleId] = useState("");
 
-  const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
-  };
+    const handleRegister = async () => {
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage("");
-    setError("");
+        if (!email || !password || !roleId) {
+            alert("Please fill all fields.");
+            return;
+        }
 
-    try {
-      await axios.post("http://127.0.0.1:8000/auth/register", form);
-      setMessage("Registration successful! Redirecting to login...");
-      setTimeout(() => {
-        navigate("/");
-      }, 1200);
-    } catch (err) {
-      setError(err.response?.data?.detail || err.message || "Registration failed. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+        try {
 
-  return (
-    <div className="register-container">
-      <div className="register-card">
-        <h1 className="register-title">Create Your Account</h1>
-        <p className="register-description">
-          Sign up to access retail analytics, live dashboard, and customer attention reports.
-        </p>
+            await api.post("/register", {
+                email: email,
+                password: password,
+                role_id: Number(roleId)
+            });
 
-        <form onSubmit={handleRegister} className="register-form">
-          <div className="register-field">
-            <label htmlFor="name" className="register-label">Full Name</label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              value={form.name}
-              onChange={handleChange}
-              required
-              className="register-input"
-            />
-          </div>
+            alert("Registration Successful!");
 
-          <div className="register-field">
-            <label htmlFor="email" className="register-label">Email Address</label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              value={form.email}
-              onChange={handleChange}
-              required
-              className="register-input"
-            />
-          </div>
+            navigate("/");
 
-          <div className="register-field">
-            <label htmlFor="password" className="register-label">Password</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              value={form.password}
-              onChange={handleChange}
-              minLength={6}
-              required
-              className="register-input"
-            />
-          </div>
+        } catch (error) {
 
-          <div className="register-field">
-            <label htmlFor="role" className="register-label">Role</label>
-            <select
-              id="role"
-              name="role"
-              value={form.role}
-              onChange={handleChange}
-              className="register-select"
-            >
-              <option value="admin">Administrator</option>
-              <option value="manager">Store Manager</option>
-              <option value="analyst">Retail Analyst</option>
-              <option value="marketing">Marketing Manager</option>
-            </select>
-          </div>
+            console.log(error);
+            alert("Registration Failed!");
 
-          <button type="submit" disabled={loading} className="register-button">
-            {loading ? "Registering..." : "Create Account"}
-          </button>
-        </form>
+        }
 
-        {error && <p className="register-message register-error">{error}</p>}
-        {message && <p className="register-message register-success">{message}</p>}
+    };
 
-        <p className="register-footer">
-          Already have an account?{' '}
-          <Link to="/" className="register-link">Login here</Link>
-        </p>
-      </div>
-    </div>
-  );
+    return (
+
+        <div className="login-container">
+
+            <div className="login-card">
+
+                <h1>Consumer Attention Mapping System</h1>
+
+                <p>Create your account</p>
+
+                <label>Email</label>
+
+                <input
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+
+                <label>Password</label>
+
+                <input
+                    type="password"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+
+                <label>Role</label>
+
+                <select
+                    value={roleId}
+                    onChange={(e) => setRoleId(e.target.value)}
+                >
+                    <option value="">Select Role</option>
+                    <option value="1">Admin</option>
+                    <option value="2">Store Manager</option>
+                    <option value="3">Retail Analyst</option>
+                    <option value="4">Marketing Manager</option>
+                </select>
+
+                <button onClick={handleRegister}>
+                    Register
+                </button>
+
+                <div className="register-link">
+                    Already have an account?{" "}
+                    <span
+                        className="register-text"
+                        onClick={() => navigate("/")}
+                    >
+                        Login
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+    );
+
 }
+
+export default Register;

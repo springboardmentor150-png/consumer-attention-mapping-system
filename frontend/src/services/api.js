@@ -1,18 +1,20 @@
-import axios from 'axios';
+import axios from "axios";
 
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000',
+    baseURL: process.env.REACT_APP_API_URL || "http://127.0.0.1:8000"
 });
 
+// Attach JWT to every request
 api.interceptors.request.use((config) => {
-  const token = window.localStorage.getItem('authToken');
 
-  if (token) {
-    config.headers = config.headers || {};
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+    const token = localStorage.getItem("access_token");
 
-  return config;
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+
 });
 
 export default api;

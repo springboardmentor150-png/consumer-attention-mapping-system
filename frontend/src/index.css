@@ -1,0 +1,18 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:"Poppins",sans-serif;
+
+    background:
+        radial-gradient(circle at top left,#00e5ff 0%,transparent 35%),
+        radial-gradient(circle at bottom right,#0066ff 0%,transparent 35%),
+        linear-gradient(135deg,#0b1120,#1e3a8a,#2563eb);
+
+    background-attachment:fixed;
+    min-height:100vh;
+}

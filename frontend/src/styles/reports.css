@@ -1,0 +1,252 @@
+.reports-page {
+    padding: 30px;
+    min-height: 100vh;
+    background: #071a2b;
+    color: #e8f7ff;
+}
+
+
+/* ================================
+   HEADER
+================================ */
+
+.reports-header {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.reports-header h1 {
+    margin: 0;
+    color: #ffffff;
+}
+
+.reports-header p {
+    margin-top: 5px;
+    color: #9ddfff;
+}
+
+
+/* ================================
+   BACK BUTTON
+================================ */
+
+.back-btn {
+    padding: 10px 18px;
+    border: 1px solid #00c8ff;
+    border-radius: 8px;
+    cursor: pointer;
+    background: rgba(0, 200, 255, 0.12);
+    color: #ffffff;
+    transition: 0.3s;
+}
+
+.back-btn:hover {
+    background: rgba(0, 200, 255, 0.25);
+    box-shadow: 0 0 12px rgba(0, 200, 255, 0.35);
+}
+
+
+/* ================================
+   REPORT SECTIONS
+================================ */
+
+.report-section {
+    background: rgba(10, 45, 70, 0.85);
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 14px;
+    border: 1px solid rgba(0, 200, 255, 0.2);
+    box-shadow: 0 0 18px rgba(0, 200, 255, 0.08);
+}
+
+.report-section h2 {
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+
+/* ================================
+   SUMMARY CARDS
+================================ */
+
+.report-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+}
+
+.report-card {
+    padding: 20px;
+    background: rgba(0, 150, 210, 0.12);
+    border: 1px solid rgba(0, 200, 255, 0.25);
+    border-radius: 12px;
+    transition: 0.3s;
+}
+
+.report-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 15px rgba(0, 200, 255, 0.2);
+}
+
+.report-card h3 {
+    margin-top: 0;
+    color: #9ddfff;
+}
+
+.report-card p {
+    font-size: 26px;
+    font-weight: bold;
+    color: #00d9ff;
+}
+
+
+/* ================================
+   LARGE CARDS
+================================ */
+
+.large-card {
+    margin-bottom: 20px;
+}
+
+
+/* ================================
+   ZONE CARDS
+================================ */
+
+.zone-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.zone-card {
+    padding: 25px;
+    border-radius: 12px;
+    background: rgba(0, 150, 210, 0.12);
+    border: 1px solid rgba(0, 200, 255, 0.25);
+    text-align: center;
+}
+
+.zone-card h3 {
+    color: #9ddfff;
+}
+
+.zone-card p {
+    font-size: 24px;
+    font-weight: bold;
+    color: #00d9ff;
+}
+
+
+/* ================================
+   TABLE
+================================ */
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 14px;
+    border-bottom: 1px solid rgba(0, 200, 255, 0.15);
+    text-align: left;
+}
+
+th {
+    background: rgba(0, 150, 210, 0.18);
+    color: #00d9ff;
+}
+
+td {
+    color: #e8f7ff;
+}
+
+tr:hover {
+    background: rgba(0, 200, 255, 0.05);
+}
+
+
+/* ================================
+   ERROR MESSAGE
+================================ */
+
+.error-message {
+    padding: 15px;
+    margin-bottom: 20px;
+    background: rgba(220, 38, 38, 0.15);
+    color: #ff9b9b;
+    border: 1px solid rgba(255, 80, 80, 0.3);
+    border-radius: 8px;
+}
+
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 800px) {
+    .zone-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .reports-page {
+        padding: 20px;
+    }
+
+    .reports-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+.report-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.report-title-row h2 {
+    margin-bottom: 0;
+}
+
+.export-btn {
+    background: linear-gradient(135deg, #00bfff, #2d56c5);
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .3s;
+    box-shadow: 0 5px 15px rgba(0,191,255,.3);
+}
+
+.export-btn:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #00e5ff, #2563eb);
+    box-shadow: 0 8px 20px rgba(0,191,255,.4);
+}
+
+@media(max-width:700px) {
+
+    .report-title-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .export-btn {
+        width: 100%;
+    }
+
+}
