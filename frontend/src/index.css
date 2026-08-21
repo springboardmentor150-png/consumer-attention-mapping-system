@@ -1,13 +1,81 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Colors */
+  --color-darkBg: #0B0F19;
+  --color-darkCard: #151B2C;
+  --color-darkBorder: #222D44;
+  --color-accentCyan: #00F2FE;
+  --color-accentBlue: #4FACFE;
+  --color-accentGreen: #39FF14;
+  --color-accentOrange: #FF5E36;
+  --color-neonPurple: #BD00FF;
+
+  /* Font */
+  --font-sans: "Outfit", "Inter", system-ui, -apple-system, sans-serif;
+
+  /* Shadows */
+  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --shadow-neon: 0 0 15px rgba(79, 172, 254, 0.4);
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@layer base {
+  body {
+    background-color: var(--color-darkBg);
+    color: rgb(229 231 235);
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+
+/* Custom Utilities for Glassmorphism & premium UI */
+.glass-panel {
+  background: rgba(21, 27, 44, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(34, 45, 68, 0.7);
+}
+
+.glass-panel-hover {
+  transition: all 300ms ease;
+}
+.glass-panel-hover:hover {
+  box-shadow: 0 0 15px rgba(79, 172, 254, 0.4);
+  border-color: rgba(79, 172, 254, 0.4);
+}
+
+/* Neon text & borders */
+.neon-glow-cyan {
+  text-shadow: 0 0 8px rgba(0, 242, 254, 0.6);
+}
+
+.neon-glow-blue {
+  text-shadow: 0 0 8px rgba(79, 172, 254, 0.6);
+}
+
+.neon-border-glow-blue {
+  box-shadow: 0 0 15px rgba(79, 172, 254, 0.2);
+}
+
+/* Custom Scrollbar for premium dark aesthetic */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0B0F19;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1D263B;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4FACFE;
 }

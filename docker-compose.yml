@@ -1,19 +1,66 @@
-version: "3.9"
+# Consumer Attention Mapping System — Docker Compose
+# PostgreSQL + FastAPI Backend + React Frontend
+# NO MongoDB, Firebase, or Supabase — PostgreSQL ONLY
 
 services:
+  # ── PostgreSQL Database ──
+  db:
+    image: postgres:16-alpine
+    container_name: cams_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: cams_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cams_secure_password}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── FastAPI Backend ──
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cams_backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+pg8000://postgres:${POSTGRES_PASSWORD:-cams_secure_password}@db:5432/cams_db
+      SECRET_KEY: ${SECRET_KEY:-change-this-to-a-random-secret}
+      ACCESS_TOKEN_EXPIRE_MINUTES: 480
+      VIDEO_DATA_PATH: /app/uploads/videos
+      REPORTS_DIR: /app/uploads/reports
+      CORS_ORIGINS: http://localhost,http://localhost:80,http://localhost:5173
     ports:
       - "8000:8000"
     volumes:
-      - ./backend/consumer_attention.db:/app/consumer_attention.db
-      - ./backend/app/static:/app/app/static
-    environment:
-      - DATABASE_URL=sqlite:///./consumer_attention.db
+      - uploads_data:/app/uploads
+      - models_data:/app/models
+    depends_on:
+      db:
+        condition: service_healthy
 
+  # ── React Frontend ──
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: cams_frontend
+    restart: unless-stopped
     ports:
-      - "3000:80"
+      - "80:80"
     depends_on:
       - backend
+
+volumes:
+  postgres_data:
+    driver: local
+  uploads_data:
+    driver: local
+  models_data:
+    driver: local
