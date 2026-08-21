@@ -1,0 +1,22 @@
+# Virtual Environment
+venv/
+
+# Python Cache
+__pycache__/
+*.pyc
+
+# Environment Variables
+.env
+
+# VS Code
+.vscode/
+
+# Testing
+.pytest_cache/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Uploaded and staged videos (never committed)
+app/static/videos/

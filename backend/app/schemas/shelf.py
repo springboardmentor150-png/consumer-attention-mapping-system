@@ -1,15 +1,14 @@
-from pydantic import BaseModel, ConfigDict
-from typing import Optional, Dict, Any
+from pydantic import BaseModel
 
-class ShelfBase(BaseModel):
+
+class ShelfCreate(BaseModel):
     shelf_name: str
-    category: str
-    store_id: int
-    zone_coordinates: Optional[Dict[str, Any]] = None
+    zone_coordinates: str
 
-class ShelfCreate(ShelfBase):
-    pass
 
-class ShelfResponse(ShelfBase):
+class ShelfResponse(ShelfCreate):
     id: int
-    model_config = ConfigDict(from_attributes=True)
+    store_id: int
+
+    class Config:
+        from_attributes = True
